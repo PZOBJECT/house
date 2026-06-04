@@ -1,0 +1,24 @@
+# 后端构建产物
+backend/house
+backend/tmp/
+
+# 依赖目录
+backend/vendor/
+frontend/node_modules/
+
+# 环境变量/密钥
+.env
+*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
