@@ -71,8 +71,8 @@ func (s *BillService) GenerateBills(year, month int) error {
 	})
 }
 
-func (s *BillService) GetBillList(year, month int, roomNo string, isPaid *int) ([]model.Bill, error) {
-	return s.billRepo.List(year, month, roomNo, isPaid)
+func (s *BillService) GetBillList(year, month int, roomNo string, isPaid *int, floor *int) ([]model.Bill, error) {
+	return s.billRepo.List(year, month, roomNo, isPaid, floor)
 }
 
 func (s *BillService) UpdateBill(id uint, req UpdateBillReq) error {

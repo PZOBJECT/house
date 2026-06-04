@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/PZOBJECT/house/backend/model"
 	"gorm.io/gorm"
 )
@@ -13,11 +15,14 @@ func NewRoomRepo(db *gorm.DB) *RoomRepo {
 	return &RoomRepo{db: db}
 }
 
-func (r *RoomRepo) GetAll(rented *int) ([]model.Room, error) {
+func (r *RoomRepo) GetAll(rented *int, floor *int) ([]model.Room, error) {
 	var rooms []model.Room
 	q := r.db.Model(&model.Room{})
 	if rented != nil {
 		q = q.Where("is_rented = ?", *rented)
+	}
+	if floor != nil {
+		q = q.Where("room_no LIKE ?", fmt.Sprintf("%d%%", *floor))
 	}
 	if err := q.Order("room_no").Find(&rooms).Error; err != nil {
 		return nil, err

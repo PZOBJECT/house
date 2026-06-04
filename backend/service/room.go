@@ -22,8 +22,8 @@ type UpdateRoomReq struct {
 	IsRented   *int     `json:"is_rented"`
 }
 
-func (s *RoomService) GetRoomList(rented *int) ([]model.Room, error) {
-	return s.repo.GetAll(rented)
+func (s *RoomService) GetRoomList(rented *int, floor *int) ([]model.Room, error) {
+	return s.repo.GetAll(rented, floor)
 }
 
 func (s *RoomService) UpdateRoom(roomNo string, req UpdateRoomReq) error {

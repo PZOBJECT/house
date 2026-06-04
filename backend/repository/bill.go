@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/PZOBJECT/house/backend/model"
 	"gorm.io/gorm"
 )
@@ -28,7 +30,7 @@ func (r *BillRepo) GetLastBill(roomNo string, year, month int) (*model.Bill, err
 	return &bill, nil
 }
 
-func (r *BillRepo) List(year, month int, roomNo string, isPaid *int) ([]model.Bill, error) {
+func (r *BillRepo) List(year, month int, roomNo string, isPaid *int, floor *int) ([]model.Bill, error) {
 	var bills []model.Bill
 	q := r.db.Model(&model.Bill{})
 	if year > 0 {
@@ -42,6 +44,9 @@ func (r *BillRepo) List(year, month int, roomNo string, isPaid *int) ([]model.Bi
 	}
 	if isPaid != nil {
 		q = q.Where("is_paid = ?", *isPaid)
+	}
+	if floor != nil {
+		q = q.Where("room_no LIKE ?", fmt.Sprintf("%d%%", *floor))
 	}
 	if err := q.Order("room_no").Find(&bills).Error; err != nil {
 		return nil, err

@@ -72,16 +72,16 @@ func initRooms(db *gorm.DB) {
 	}
 
 	var rooms []model.Room
-	// 三层楼：1楼101-112, 2楼201-212, 3楼301-312
-	for floor := 1; floor <= 3; floor++ {
-		for no := 1; no <= 12; no++ {
+	// 改为：2-5层，每层 9 个房间（201-209、301-309...501-509）
+	for floor := 2; floor <= 5; floor++ {
+		for no := 1; no <= 9; no++ {
 			roomNo := fmt.Sprintf("%d%02d", floor, no)
 			rooms = append(rooms, model.Room{
 				RoomNo:     roomNo,
 				RentPrice:  1200,
 				ElecPrice:  1.0,
-				WaterPrice: 5.0,
-				IsRented:   1,
+				WaterPrice: 3.0,
+				IsRented:   0,
 			})
 		}
 	}

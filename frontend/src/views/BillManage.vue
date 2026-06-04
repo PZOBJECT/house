@@ -2,7 +2,7 @@
   <div>
     <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px">
       <h2 style="margin: 0">月度账单</h2>
-      <div style="display: flex; gap: 12px; align-items: center">
+      <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap">
         <el-date-picker
           v-model="selectedMonth"
           type="month"
@@ -12,6 +12,13 @@
           :clearable="false"
           style="width: 180px"
         />
+        <el-select v-model="filterFloor" placeholder="楼层筛选" style="width: 120px" @change="fetchBills">
+          <el-option label="全部" :value="undefined" />
+          <el-option label="2楼" :value="2" />
+          <el-option label="3楼" :value="3" />
+          <el-option label="4楼" :value="4" />
+          <el-option label="5楼" :value="5" />
+        </el-select>
         <el-button type="primary" @click="handleGenerate">生成当月账单</el-button>
       </div>
     </div>
@@ -108,6 +115,7 @@ import ReceiptDialog from './ReceiptDialog.vue'
 const bills = ref([])
 const loading = ref(false)
 const receiptDialogRef = ref(null)
+const filterFloor = ref(undefined)
 
 const now = new Date()
 const selectedMonth = ref(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`)
@@ -133,7 +141,11 @@ function tableRowClassName({ row }) {
 async function fetchBills() {
   loading.value = true
   try {
-    const res = await getBillList(queryParams.value)
+    const params = { ...queryParams.value }
+    if (filterFloor.value !== undefined) {
+      params.floor = filterFloor.value
+    }
+    const res = await getBillList(params)
     bills.value = res.data || []
   } finally {
     loading.value = false
@@ -174,6 +186,12 @@ async function saveMeter() {
   const val = parseFloat(meterDialog.current)
   if (isNaN(val) || val < 0) {
     ElMessage.warning('请输入有效的读数')
+    return
+  }
+  // 检查读数是否低于上月读数
+  const lastVal = parseFloat(meterDialog.last)
+  if (!isNaN(lastVal) && val < lastVal) {
+    ElMessage.warning('本月读数不能低于上月读数')
     return
   }
   const data = {}

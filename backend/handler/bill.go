@@ -55,7 +55,17 @@ func (h *BillHandler) GetBillList(c *gin.Context) {
 		isPaid = &n
 	}
 
-	bills, err := h.svc.GetBillList(year, month, roomNo, isPaid)
+	var floor *int
+	if v := c.Query("floor"); v != "" {
+		n, err := strconv.Atoi(v)
+		if err != nil || n < 1 || n > 9 {
+			middleware.Error(c, "floor参数无效")
+			return
+		}
+		floor = &n
+	}
+
+	bills, err := h.svc.GetBillList(year, month, roomNo, isPaid, floor)
 	if err != nil {
 		middleware.Error(c, err.Error())
 		return

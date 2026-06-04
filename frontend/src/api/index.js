@@ -21,8 +21,15 @@ api.interceptors.response.use(
   }
 )
 
-export function getRooms(rented) {
-  return api.get('/rooms', { params: { rented } })
+export function getRooms(rented, floor) {
+  const params = {}
+  if (rented !== undefined) {
+    params.rented = rented
+  }
+  if (floor !== undefined) {
+    params.floor = floor
+  }
+  return api.get('/rooms', { params })
 }
 
 export function updateRoom(roomNo, data) {

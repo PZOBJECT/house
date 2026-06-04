@@ -2,7 +2,7 @@
   <div>
     <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px">
       <h2 style="margin: 0">历史账单</h2>
-      <div style="display: flex; gap: 12px; align-items: center">
+      <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap">
         <el-date-picker
           v-model="selectedMonth"
           type="month"
@@ -17,6 +17,13 @@
           <el-option label="全部" :value="undefined" />
           <el-option label="已收费" :value="1" />
           <el-option label="未收费" :value="0" />
+        </el-select>
+        <el-select v-model="filterFloor" placeholder="楼层筛选" clearable style="width: 120px" @change="fetchBills">
+          <el-option label="全部" :value="undefined" />
+          <el-option label="2楼" :value="2" />
+          <el-option label="3楼" :value="3" />
+          <el-option label="4楼" :value="4" />
+          <el-option label="5楼" :value="5" />
         </el-select>
       </div>
     </div>
@@ -74,6 +81,7 @@ const loading = ref(false)
 const receiptDialogRef = ref(null)
 const selectedMonth = ref('')
 const filterPaid = ref(undefined)
+const filterFloor = ref(undefined)
 
 function tableRowClassName({ row }) {
   return row.is_paid ? 'paid-row' : ''
@@ -90,6 +98,9 @@ async function fetchBills() {
     }
     if (filterPaid.value !== undefined) {
       params.is_paid = filterPaid.value
+    }
+    if (filterFloor.value !== undefined) {
+      params.floor = filterFloor.value
     }
     const res = await getBillList(params)
     bills.value = res.data || []

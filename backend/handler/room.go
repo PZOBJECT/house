@@ -26,7 +26,16 @@ func (h *RoomHandler) GetRooms(c *gin.Context) {
 		}
 		rented = &n
 	}
-	rooms, err := h.svc.GetRoomList(rented)
+	var floor *int
+	if v := c.Query("floor"); v != "" {
+		n, err := strconv.Atoi(v)
+		if err != nil || n < 1 || n > 9 {
+			middleware.Error(c, "floor参数无效")
+			return
+		}
+		floor = &n
+	}
+	rooms, err := h.svc.GetRoomList(rented, floor)
 	if err != nil {
 		middleware.Error(c, err.Error())
 		return

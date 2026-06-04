@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center">
+    <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center">
       <h2 style="margin: 0">房间管理</h2>
       <el-radio-group v-model="filterRented" @change="fetchRooms">
         <el-radio-button :value="undefined">全部</el-radio-button>
@@ -8,8 +8,17 @@
         <el-radio-button :value="0">未出租</el-radio-button>
       </el-radio-group>
     </div>
+    <div style="margin-bottom: 16px">
+      <span style="margin-right: 8px; font-weight: 500">楼层筛选：</span>
+      <el-radio-group v-model="filterFloor" @change="fetchRooms">
+        <el-radio-button :value="2">2楼</el-radio-button>
+        <el-radio-button :value="3">3楼</el-radio-button>
+        <el-radio-button :value="4">4楼</el-radio-button>
+        <el-radio-button :value="5">5楼</el-radio-button>
+      </el-radio-group>
+    </div>
 
-    <el-table :data="rooms" border stripe v-loading="loading" empty-text="暂无房间数据">
+    <el-table :data="rooms" border stripe v-loading="loading" empty-text="暂无房间数据" :cell-style="{fontSize: '16px'}">
       <el-table-column prop="room_no" label="房间号" width="100" align="center" />
       <el-table-column prop="rent_price" label="月租金（元）" width="140" align="center">
         <template #default="{ row }">
@@ -70,13 +79,14 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 const rooms = ref([])
 const loading = ref(false)
 const filterRented = ref(undefined)
+const filterFloor = ref(2)
 const editingRoom = ref(null)
 const editForm = reactive({ rent_price: '', elec_price: '', water_price: '' })
 
 async function fetchRooms() {
   loading.value = true
   try {
-    const res = await getRooms(filterRented.value)
+    const res = await getRooms(filterRented.value, filterFloor.value)
     rooms.value = res.data || []
   } finally {
     loading.value = false
