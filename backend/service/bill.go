@@ -43,10 +43,11 @@ func (s *BillService) GenerateBills(year, month int) error {
 			}
 
 			bill := &model.Bill{
-				RoomNo:   room.RoomNo,
-				Year:     year,
-				Month:    month,
-				RentCost: room.RentPrice,
+				RoomNo:    room.RoomNo,
+				Year:      year,
+				Month:     month,
+				RentCost:  room.RentPrice,
+				TotalCost: room.RentPrice,
 			}
 
 			// 获取上月账单读数作为本月last
