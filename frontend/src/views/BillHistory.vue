@@ -57,7 +57,7 @@
       </el-table-column>
       <el-table-column label="收费日期" width="160" align="center">
         <template #default="{ row }">
-          {{ row.paid_at || '-' }}
+          {{ formatDate(row.paid_at) }}
         </template>
       </el-table-column>
       <el-table-column label="操作" width="100" align="center">
@@ -132,6 +132,12 @@ async function fetchBills() {
   } finally {
     loading.value = false
   }
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '-'
+  const d = new Date(dateStr)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
 function openReceipt(row) {
