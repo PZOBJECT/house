@@ -3,7 +3,7 @@
     <!-- 头部 -->
     <div class="page-header">
       <h2>月度账单</h2>
-      <div class="header-actions">
+      <div class="filter-bar">
         <el-date-picker
           v-model="selectedMonth"
           type="month"
@@ -11,10 +11,38 @@
           format="YYYY年MM月"
           value-format="YYYY-MM"
           :clearable="false"
-          style="width: 180px"
+          class="filter-month"
           @change="onMonthChange"
         />
-        <el-button type="primary" @click="handleGenerate">生成当月账单</el-button>
+        <el-button type="primary" class="filter-btn" @click="handleGenerate">+ 生成当月账单</el-button>
+      </div>
+    </div>
+
+    <!-- 统计栏 -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-label">房间</span>
+        <span class="stat-value">{{ bills.length }}<span class="stat-unit">间</span></span>
+      </div>
+      <div class="stat-divider" />
+      <div class="stat-item">
+        <span class="stat-label">电费合计</span>
+        <span class="stat-value stat-blue">{{ calcTotal('elec_cost') }}<span class="stat-unit">元</span></span>
+      </div>
+      <div class="stat-divider" />
+      <div class="stat-item">
+        <span class="stat-label">水费合计</span>
+        <span class="stat-value stat-blue">{{ calcTotal('water_cost') }}<span class="stat-unit">元</span></span>
+      </div>
+      <div class="stat-divider" />
+      <div class="stat-item">
+        <span class="stat-label">房租合计</span>
+        <span class="stat-value stat-orange">{{ calcTotal('rent_cost') }}<span class="stat-unit">元</span></span>
+      </div>
+      <div class="stat-divider" />
+      <div class="stat-item">
+        <span class="stat-label">总合计</span>
+        <span class="stat-value stat-red">{{ calcTotal('total_cost') }}<span class="stat-unit">元</span></span>
       </div>
     </div>
 
@@ -51,8 +79,6 @@
         v-loading="loading"
         empty-text="暂无账单数据，请先生成账单"
         :row-class-name="tableRowClassName"
-        show-summary
-        :summary-method="getSummaries"
         height="100%"
       >
         <el-table-column prop="room_no" label="房间号" width="90" align="center" fixed />
@@ -175,33 +201,17 @@ const meterDialog = reactive({
   lastEditable: false
 })
 
-function tableRowClassName({ row }) {
-  return row.is_paid ? 'paid-row' : ''
+function calcTotal(prop) {
+  let total = 0
+  bills.value.forEach(row => {
+    const val = Number(row[prop])
+    if (!isNaN(val)) total += val
+  })
+  return total.toFixed(2)
 }
 
-function getSummaries({ columns, data }) {
-  const sums = []
-  columns.forEach((column, index) => {
-    if (index === 0) {
-      sums[index] = '合计'
-      return
-    }
-    const prop = column.property
-    if (['elec_cost', 'water_cost', 'rent_cost', 'total_cost'].includes(prop)) {
-      let total = 0
-      data.forEach(row => {
-        const val = Number(row[prop])
-        if (!isNaN(val)) {
-          total += val
-        }
-      })
-      sums[index] = total.toFixed(2)
-    } else {
-      sums[index] = ''
-    }
-  })
-  sums[0] = `共 ${data.length} 间`
-  return sums
+function tableRowClassName({ row }) {
+  return row.is_paid ? 'paid-row' : ''
 }
 
 function onMonthChange() {
@@ -336,12 +346,13 @@ onMounted(fetchBills)
   padding: 0 2px;
 }
 
+/* ── 头部 ── */
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
   margin-bottom: 8px;
   flex-shrink: 0;
 }
@@ -352,11 +363,87 @@ onMounted(fetchBills)
   color: #303133;
 }
 
-.header-actions {
+/* 日期+按钮筛选栏 */
+.filter-bar {
   display: flex;
-  gap: 12px;
   align-items: center;
-  flex-wrap: wrap;
+  gap: 8px;
+  padding: 5px 10px;
+  background: #f5f7fa;
+  border-radius: 10px;
+  border: 1px solid #e8ecf1;
+}
+
+.filter-month :deep(.el-input__wrapper) {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: none;
+  border: 1px solid #e0e4ea;
+}
+
+.filter-month :deep(.el-input__wrapper:hover) {
+  border-color: #409eff;
+}
+
+.filter-btn {
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+/* ── 统计栏 ── */
+.stats-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+  background: #f5f7fa;
+  border-radius: 10px;
+  padding: 10px 16px;
+  border: 1px solid #e8ecf1;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #909399;
+  letter-spacing: 0.3px;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #303133;
+  line-height: 1.3;
+}
+
+.stat-unit {
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 2px;
+  opacity: 0.7;
+}
+
+.stat-blue { color: #409eff; }
+.stat-orange { color: #e6a23c; }
+.stat-red { color: #f56c6c; }
+
+.stat-divider {
+  width: 1px;
+  height: 34px;
+  background: #e0e4ea;
+  margin: 0 4px;
+  flex-shrink: 0;
 }
 
 /* ── 楼层卡片筛选 ── */
@@ -457,6 +544,7 @@ onMounted(fetchBills)
   box-shadow: 0 1px 4px rgba(103, 194, 58, 0.4);
 }
 
+/* ── 表格 ── */
 .table-wrapper {
   flex: 1;
   min-height: 0;
