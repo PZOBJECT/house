@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="visible" title="房租收据" width="520px" :close-on-click-modal="false" @opened="onOpened">
+  <el-dialog v-model="visible" title="房租收据" width="560px" :close-on-click-modal="false" @opened="onOpened">
     <div ref="receiptRef" class="receipt-container">
       <div class="receipt-title">房租收据</div>
       <div class="receipt-info">
@@ -141,27 +141,27 @@ defineExpose({ open })
 
 <style scoped>
 .receipt-container {
-  padding: 24px 20px;
+  padding: 28px 24px;
   background: #fff;
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
 }
 
 .receipt-title {
   text-align: center;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   letter-spacing: 4px;
 }
 
 .receipt-info {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .info-row {
-  margin-bottom: 6px;
-  font-size: 14px;
+  margin-bottom: 8px;
+  font-size: 16px;
 }
 
 .info-value {
@@ -171,15 +171,15 @@ defineExpose({ open })
 .receipt-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .receipt-table th,
 .receipt-table td {
   border: 1px solid #dcdfe6;
-  padding: 8px 6px;
+  padding: 10px 8px;
   text-align: center;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .receipt-table thead th {
@@ -193,19 +193,19 @@ defineExpose({ open })
 
 .total-label {
   text-align: right;
-  padding-right: 12px;
+  padding-right: 14px;
 }
 
 .total-amount {
   color: #e6a23c;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .receipt-footer {
   display: flex;
   justify-content: space-between;
-  margin-top: 24px;
+  margin-top: 28px;
   padding: 0 10px;
-  font-size: 14px;
+  font-size: 15px;
 }
 </style>
