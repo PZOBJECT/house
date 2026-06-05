@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="roofGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4aabff"/>
+      <stop offset="100%" stop-color="#409eff"/>
+    </linearGradient>
+    <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8f4ff"/>
+      <stop offset="100%" stop-color="#cce6ff"/>
+    </linearGradient>
+  </defs>
+
+  <!-- background circle -->
+  <circle cx="256" cy="256" r="258.04800000000006" fill="#f0f8ff" opacity="0.3"/>
+
+  <!-- roof -->
+  <polygon points="256,83.19999999999999 14.079999999999984,244.48 497.92,244.48" fill="url(#roofGrad)"/>
+  <!-- roof ridge highlight -->
+  <polygon points="256,90.112 221.44,237.56799999999998 290.56,237.56799999999998" fill="#196edc"/>
+
+  <!-- house body -->
+  <rect x="48.639999999999986" y="244.48" width="414.72" height="218.88" rx="18.432000000000002" fill="url(#bodyGrad)"/>
+
+  <!-- left window -->
+  <rect x="76.28799999999998" y="267.52" width="73.72800000000001" height="73.72800000000001" rx="9.216000000000001" fill="white" stroke="#409eff" stroke-width="4.6080000000000005"/>
+  <line x1="113.15199999999999" y1="267.52" x2="113.15199999999999" y2="341.248" stroke="#409eff" stroke-width="4.1472"/>
+  <line x1="76.28799999999998" y1="304.384" x2="150.016" y2="304.384" stroke="#409eff" stroke-width="4.1472"/>
+
+  <!-- right window -->
+  <rect x="361.98400000000004" y="267.52" width="73.72800000000001" height="73.72800000000001" rx="9.216000000000001" fill="white" stroke="#409eff" stroke-width="4.6080000000000005"/>
+  <line x1="398.848" y1="267.52" x2="398.848" y2="341.248" stroke="#409eff" stroke-width="4.1472"/>
+  <line x1="361.98400000000004" y1="304.384" x2="435.712" y2="304.384" stroke="#409eff" stroke-width="4.1472"/>
+
+  <!-- door -->
+  <rect x="205.312" y="297.472" width="101.376" height="172.8" rx="20.736" fill="#409eff"/>
+  <!-- door knob -->
+  <circle cx="269.824" cy="385.024" r="9.216000000000001" fill="white"/>
+  <!-- keyhole -->
+  <circle cx="256" cy="334.336" r="16.128000000000004" fill="white"/>
+  <rect x="249.088" y="334.336" width="13.824" height="27.648" rx="2.3040000000000003" fill="white"/>
+
+  <!-- ground line -->
+  <line x1="37.120000000000005" y1="470.27200000000005" x2="474.88" y2="470.27200000000005" stroke="#cce6ff" stroke-width="4.6080000000000005" stroke-linecap="round"/>
+</svg>
