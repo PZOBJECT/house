@@ -127,22 +127,52 @@
       </div>
     </div>
 
-    <!-- 底部最新收租动态 -->
+    <!-- 底部已缴费 / 待缴费 -->
     <div class="recent-section">
       <div class="recent-header">
         <svg viewBox="0 0 24 24" width="18" height="18"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" fill="currentColor"/></svg>
-        <span>最新缴费记录</span>
+        <span>缴费明细</span>
       </div>
-      <div class="recent-list" v-if="recentPaid.length > 0">
-        <div class="recent-item" v-for="item in recentPaid" :key="item.id">
-          <span class="recent-room">{{ item.room_no }}</span>
-          <span class="recent-money">{{ item.total_cost }}元</span>
-          <span class="recent-date">{{ formatDate(item.paid_at) }}</span>
+      <div class="recent-columns">
+        <!-- 左侧：已缴费 -->
+        <div class="recent-col col-paid">
+          <div class="col-header">
+            <svg viewBox="0 0 24 24" width="14" height="14"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor"/></svg>
+            已缴费
+            <span class="col-count">{{ paidCount }}</span>
+          </div>
+          <div class="scroll-wrap" v-if="paidList.length > 0">
+            <div class="scroll-track" :style="{ animationDuration: paidDuration }">
+              <div class="scroll-item" v-for="(item, i) in paidScrollItems" :key="'p'+i">
+                <span class="si-room">{{ item.room_no }}</span>
+                <span class="si-money">{{ item.total_cost }}元</span>
+              </div>
+            </div>
+          </div>
+          <div class="scroll-empty" v-else>
+            <span>暂无已缴费记录</span>
+          </div>
         </div>
-      </div>
-      <div class="recent-empty" v-else>
-        <svg viewBox="0 0 24 24" width="40" height="40"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="#dcdfe6"/></svg>
-        <span>暂无缴费记录</span>
+        <div class="col-divider" />
+        <!-- 右侧：待缴费 -->
+        <div class="recent-col col-unpaid">
+          <div class="col-header">
+            <svg viewBox="0 0 24 24" width="14" height="14"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" fill="currentColor"/></svg>
+            待缴费
+            <span class="col-count">{{ unpaidCount }}</span>
+          </div>
+          <div class="scroll-wrap" v-if="unpaidList.length > 0">
+            <div class="scroll-track" :style="{ animationDuration: unpaidDuration }">
+              <div class="scroll-item" v-for="(item, i) in unpaidScrollItems" :key="'u'+i">
+                <span class="si-room">{{ item.room_no }}</span>
+                <span class="si-money">{{ item.total_cost }}元</span>
+              </div>
+            </div>
+          </div>
+          <div class="scroll-empty" v-else>
+            <span>暂无待缴费房间</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -212,13 +242,34 @@ const rentedCount = computed(() => allRooms.value.filter(r => r.is_rented === 1)
 const totalRooms = computed(() => allRooms.value.length)
 const occupancyPercent = computed(() => totalRooms.value > 0 ? Math.round((rentedCount.value / totalRooms.value) * 100) : 0)
 
-// 最新缴费记录
-const recentPaid = computed(() =>
+// 已缴费 / 待缴费列表
+const paidList = computed(() =>
   [...bills.value]
     .filter(b => b.is_paid && b.paid_at)
     .sort((a, b) => new Date(b.paid_at) - new Date(a.paid_at))
-    .slice(0, 5)
 )
+
+const unpaidList = computed(() =>
+  [...bills.value]
+    .filter(b => !b.is_paid)
+)
+
+// 用于无缝滚动的列表（翻倍）
+const paidScrollItems = computed(() => [...paidList.value, ...paidList.value])
+const unpaidScrollItems = computed(() => [...unpaidList.value, ...unpaidList.value])
+
+// 滚动速度：项目越多越快（5~30s 自适应）
+const paidDuration = computed(() => {
+  const n = paidList.value.length
+  if (n <= 1) return '0s'
+  return Math.max(5, Math.min(30, n * 2.5)) + 's'
+})
+
+const unpaidDuration = computed(() => {
+  const n = unpaidList.value.length
+  if (n <= 1) return '0s'
+  return Math.max(5, Math.min(30, n * 2.5)) + 's'
+})
 
 const trendClass = computed(() => 'trend-up')
 const trendText = computed(() => '—')
@@ -498,7 +549,7 @@ onMounted(fetchData)
   flex-shrink: 0;
 }
 
-/* ── 最新缴费记录 ── */
+/* ── 已缴费 / 待缴费 ── */
 .recent-section {
   background: #fff;
   border-radius: 14px;
@@ -526,50 +577,113 @@ onMounted(fetchData)
 
 .recent-header svg { color: #409eff; }
 
-.recent-list {
+/* 双列布局 */
+.recent-columns {
   flex: 1;
-  overflow-y: auto;
-  padding-top: 4px;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 0;
+  padding-top: 8px;
 }
 
-.recent-item {
-  display: flex;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #f5f7fa;
-}
-
-.recent-item:last-child {
-  border-bottom: none;
-}
-
-.recent-room {
-  font-size: 15px;
-  font-weight: 700;
-  color: #303133;
-  width: 80px;
-}
-
-.recent-money {
-  font-size: 15px;
-  font-weight: 700;
-  color: #e6a23c;
-  flex: 1;
-}
-
-.recent-date {
-  font-size: 13px;
-  color: #909399;
-}
-
-.recent-empty {
-  flex: 1;
+.recent-col {
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.col-divider {
+  width: 1px;
+  background: #ebeef5;
+  margin: 0 12px;
+}
+
+.col-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #606266;
+  padding: 0 4px 8px 4px;
+  flex-shrink: 0;
+}
+
+.col-paid .col-header { color: #67c23a; }
+.col-unpaid .col-header { color: #f56c6c; }
+
+.col-count {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  color: #c0c4cc;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.col-paid .col-count {
+  background: #f0f9eb;
+  color: #67c23a;
+}
+
+.col-unpaid .col-count {
+  background: #fef0f0;
+  color: #f56c6c;
+}
+
+/* 滚动容器 */
+.scroll-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.scroll-track {
+  display: flex;
+  flex-direction: column;
+  animation: scroll-up 20s linear infinite;
+}
+
+@keyframes scroll-up {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+.scroll-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 8px;
+  border-bottom: 1px solid #f5f7fa;
+  gap: 8px;
+}
+
+.si-room {
   font-size: 14px;
+  font-weight: 700;
+  color: #303133;
+  white-space: nowrap;
+}
+
+.si-money {
+  font-size: 14px;
+  font-weight: 700;
+  color: #e6a23c;
+  white-space: nowrap;
+}
+
+.scroll-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c0c4cc;
+  font-size: 13px;
 }
 </style>
