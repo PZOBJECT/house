@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <el-table :data="bills" border stripe v-loading="loading" empty-text="暂无历史账单" :row-class-name="tableRowClassName">
+    <el-table :data="bills" border stripe v-loading="loading" empty-text="暂无历史账单" :row-class-name="tableRowClassName" show-summary :summary-method="getSummaries">
       <el-table-column prop="room_no" label="房间号" width="90" align="center" />
       <el-table-column label="电表读数" align="center">
         <el-table-column prop="elec_last" label="上月" width="90" align="center" />
@@ -87,6 +87,31 @@ function tableRowClassName({ row }) {
   return row.is_paid ? 'paid-row' : ''
 }
 
+function getSummaries({ columns, data }) {
+  const sums = []
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计'
+      return
+    }
+    const prop = column.property
+    if (['elec_cost', 'water_cost', 'rent_cost', 'total_cost'].includes(prop)) {
+      let total = 0
+      data.forEach(row => {
+        const val = Number(row[prop])
+        if (!isNaN(val)) {
+          total += val
+        }
+      })
+      sums[index] = total.toFixed(2)
+    } else {
+      sums[index] = ''
+    }
+  })
+  sums[0] = `共 ${data.length} 间`
+  return sums
+}
+
 async function fetchBills() {
   loading.value = true
   try {
@@ -118,7 +143,7 @@ onMounted(fetchBills)
 
 <style scoped>
 :deep(.paid-row) {
-  background-color: #f5f5f5;
-  color: #999;
+  background-color: #f0f0f0;
+  color: #666;
 }
 </style>

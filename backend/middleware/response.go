@@ -21,7 +21,7 @@ func Success(c *gin.Context, data interface{}) {
 }
 
 func Error(c *gin.Context, msg string) {
-	c.JSON(http.StatusOK, Response{
+	c.JSON(http.StatusBadRequest, Response{
 		Code: 1,
 		Msg:  msg,
 		Data: nil,

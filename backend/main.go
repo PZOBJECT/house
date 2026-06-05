@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/url"
 
 	"github.com/PZOBJECT/house/backend/config"
 	"github.com/PZOBJECT/house/backend/handler"
@@ -22,10 +23,13 @@ func main() {
 		log.Fatalf("加载配置失败: %v", err)
 	}
 
+	// 设置 Gin 为 Release 模式
+	gin.SetMode(gin.ReleaseMode)
+
 	// 连接MySQL
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		cfg.Mysql.User,
-		cfg.Mysql.Password,
+		url.QueryEscape(cfg.Mysql.Password),
 		cfg.Mysql.Address,
 		cfg.Mysql.Port,
 		cfg.Mysql.Dbname,

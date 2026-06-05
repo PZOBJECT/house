@@ -13,7 +13,7 @@
         </div>
         <div class="info-row" v-if="receipt.paid_at">
           <span>收费日期：</span>
-          <span class="info-value">{{ receipt.paid_at }}</span>
+          <span class="info-value">{{ formatDate(receipt.paid_at) }}</span>
         </div>
       </div>
       <table class="receipt-table">
@@ -81,6 +81,12 @@ import { saveAs } from 'file-saver'
 const visible = ref(false)
 const downloading = ref(false)
 const receiptRef = ref(null)
+
+function formatDate(dateStr) {
+  if (!dateStr) return '-'
+  const d = new Date(dateStr)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
 
 const receipt = reactive({
   room_no: '',

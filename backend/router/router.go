@@ -11,6 +11,7 @@ func SetupRoutes(r *gin.Engine, roomH *handler.RoomHandler, billH *handler.BillH
 
 	api := r.Group("/api")
 	{
+		api.GET("/health", func(c *gin.Context) { c.JSON(200, gin.H{"status": "ok"}) })
 		api.GET("/rooms", roomH.GetRooms)
 		api.PUT("/rooms/:room_no", roomH.UpdateRoom)
 

@@ -27,6 +27,8 @@ type GenerateBillsReq struct {
 type UpdateBillReq struct {
 	ElecCurrent  *float64 `json:"elec_current"`
 	WaterCurrent *float64 `json:"water_current"`
+	ElecLast     *float64 `json:"elec_last"`
+	WaterLast    *float64 `json:"water_last"`
 }
 
 func (s *BillService) GenerateBills(year, month int) error {
@@ -89,6 +91,14 @@ func (s *BillService) UpdateBill(id uint, req UpdateBillReq) error {
 		return errors.New("房间不存在")
 	}
 
+	if req.ElecLast != nil {
+		bill.ElecLast = req.ElecLast
+	}
+
+	if req.WaterLast != nil {
+		bill.WaterLast = req.WaterLast
+	}
+
 	if req.ElecCurrent != nil {
 		if *req.ElecCurrent < 0 {
 			return errors.New("电表读数不能为负数")
@@ -97,7 +107,7 @@ func (s *BillService) UpdateBill(id uint, req UpdateBillReq) error {
 		if bill.ElecLast != nil {
 			usage := *req.ElecCurrent - *bill.ElecLast
 			if usage < 0 {
-				usage = 0
+				return errors.New("电表读数不能低于上月读数")
 			}
 			bill.ElecUsage = &usage
 			cost := usage * room.ElecPrice
@@ -113,7 +123,7 @@ func (s *BillService) UpdateBill(id uint, req UpdateBillReq) error {
 		if bill.WaterLast != nil {
 			usage := *req.WaterCurrent - *bill.WaterLast
 			if usage < 0 {
-				usage = 0
+				return errors.New("水表读数不能低于上月读数")
 			}
 			bill.WaterUsage = &usage
 			cost := usage * room.WaterPrice

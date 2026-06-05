@@ -11,6 +11,7 @@
           value-format="YYYY-MM"
           :clearable="false"
           style="width: 180px"
+          @change="fetchBills"
         />
         <el-select v-model="filterFloor" placeholder="楼层筛选" style="width: 120px" @change="fetchBills">
           <el-option label="全部" :value="undefined" />
@@ -23,7 +24,7 @@
       </div>
     </div>
 
-    <el-table :data="bills" border stripe v-loading="loading" empty-text="暂无账单数据，请先生成账单" :row-class-name="tableRowClassName">
+    <el-table :data="bills" border stripe v-loading="loading" empty-text="暂无账单数据，请先生成账单" :row-class-name="tableRowClassName" show-summary :summary-method="getSummaries">
       <el-table-column prop="room_no" label="房间号" width="90" align="center" fixed />
       <el-table-column label="电表读数" align="center">
         <el-table-column prop="elec_last" label="上月" width="90" align="center" />
@@ -89,7 +90,8 @@
     <el-dialog v-model="meterDialog.visible" :title="meterDialog.title" width="400px">
       <el-form label-width="120px">
         <el-form-item label="上月读数">
-          <el-input :model-value="meterDialog.last" disabled />
+          <el-input v-if="meterDialog.lastEditable" v-model="meterDialog.last" placeholder="请输入上月读数" />
+          <el-input v-else :model-value="meterDialog.last" disabled />
         </el-form-item>
         <el-form-item label="本月读数">
           <el-input v-model="meterDialog.current" placeholder="请输入本月读数" />
@@ -131,11 +133,38 @@ const meterDialog = reactive({
   billId: null,
   type: '',
   last: '',
-  current: ''
+  current: '',
+  lastEditable: false
 })
 
 function tableRowClassName({ row }) {
   return row.is_paid ? 'paid-row' : ''
+}
+
+function getSummaries({ columns, data }) {
+  const sums = []
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计'
+      return
+    }
+    const prop = column.property
+    if (['elec_cost', 'water_cost', 'rent_cost', 'total_cost'].includes(prop)) {
+      let total = 0
+      data.forEach(row => {
+        const val = Number(row[prop])
+        if (!isNaN(val)) {
+          total += val
+        }
+      })
+      sums[index] = total.toFixed(2)
+    } else {
+      sums[index] = ''
+    }
+  })
+  // 在房间数列显示房间数量
+  sums[0] = `共 ${data.length} 间`
+  return sums
 }
 
 async function fetchBills() {
@@ -172,33 +201,51 @@ function openMeterDialog(row, type) {
   meterDialog.type = type
   if (type === 'elec') {
     meterDialog.title = `修改电表读数 - ${row.room_no}`
-    meterDialog.last = row.elec_last ?? '无'
+    const hasLast = row.elec_last !== null && row.elec_last !== undefined && row.elec_last !== 0
+    meterDialog.lastEditable = !hasLast
+    meterDialog.last = hasLast ? row.elec_last : ''
     meterDialog.current = row.elec_current ?? ''
   } else {
     meterDialog.title = `修改水表读数 - ${row.room_no}`
-    meterDialog.last = row.water_last ?? '无'
+    const hasLast = row.water_last !== null && row.water_last !== undefined && row.water_last !== 0
+    meterDialog.lastEditable = !hasLast
+    meterDialog.last = hasLast ? row.water_last : ''
     meterDialog.current = row.water_current ?? ''
   }
   meterDialog.visible = true
 }
 
 async function saveMeter() {
+  let lastVal = null
+  if (meterDialog.lastEditable) {
+    lastVal = parseFloat(meterDialog.last)
+    if (isNaN(lastVal) || lastVal < 0) {
+      ElMessage.warning('请输入有效的上月读数')
+      return
+    }
+  }
   const val = parseFloat(meterDialog.current)
   if (isNaN(val) || val < 0) {
-    ElMessage.warning('请输入有效的读数')
+    ElMessage.warning('请输入有效的本月读数')
     return
   }
-  // 检查读数是否低于上月读数
-  const lastVal = parseFloat(meterDialog.last)
-  if (!isNaN(lastVal) && val < lastVal) {
+  // 检查读数是否低于上月读数（仅当有上月读数时才校验）
+  const existingLast = parseFloat(meterDialog.last)
+  if (!isNaN(existingLast) && val < existingLast) {
     ElMessage.warning('本月读数不能低于上月读数')
     return
   }
   const data = {}
   if (meterDialog.type === 'elec') {
     data.elec_current = val
+    if (meterDialog.lastEditable && lastVal !== null) {
+      data.elec_last = lastVal
+    }
   } else {
     data.water_current = val
+    if (meterDialog.lastEditable && lastVal !== null) {
+      data.water_last = lastVal
+    }
   }
   await updateBill(meterDialog.billId, data)
   ElMessage.success('读数已更新')
@@ -245,7 +292,7 @@ onMounted(fetchBills)
 
 <style scoped>
 :deep(.paid-row) {
-  background-color: #f5f5f5;
-  color: #999;
+  background-color: #f0f0f0;
+  color: #666;
 }
 </style>
