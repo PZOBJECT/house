@@ -14,11 +14,25 @@
           style="width: 180px"
           @change="onMonthChange"
         />
-        <el-select v-model="filterFloor" placeholder="楼层筛选" style="width: 120px" @change="onFilterChange">
-          <el-option label="全部" :value="undefined" />
-          <el-option v-for="f in [2,3,4,5]" :key="f" :label="`${f}楼`" :value="f" />
-        </el-select>
         <el-button type="primary" @click="handleGenerate">生成当月账单</el-button>
+      </div>
+    </div>
+
+    <!-- 楼层筛选 — 大卡片按钮 -->
+    <div class="floor-filter">
+      <span class="floor-label">楼层</span>
+      <div class="floor-buttons">
+        <div
+          v-for="f in floorOptions"
+          :key="f.value"
+          class="floor-card"
+          :class="{ active: filterFloor === f.value }"
+          @click="selectFloor(f.value)"
+        >
+          <span class="floor-num">{{ f.label }}</span>
+          <span v-if="f.desc" class="floor-desc">{{ f.desc }}</span>
+          <span v-if="filterFloor === f.value" class="floor-check">✓</span>
+        </div>
       </div>
     </div>
 
@@ -143,6 +157,14 @@ const receiptDialogRef = ref(null)
 const filterFloor = ref(undefined)
 const currentPage = ref(1)
 
+const floorOptions = [
+  { value: undefined, label: '全部', desc: '2-5楼' },
+  { value: 2, label: '2楼', desc: '201-209' },
+  { value: 3, label: '3楼', desc: '301-309' },
+  { value: 4, label: '4楼', desc: '401-409' },
+  { value: 5, label: '5楼', desc: '501-509' }
+]
+
 const now = new Date()
 const selectedMonth = ref(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`)
 
@@ -200,7 +222,8 @@ function onMonthChange() {
   fetchBills()
 }
 
-function onFilterChange() {
+function selectFloor(val) {
+  filterFloor.value = val
   currentPage.value = 1
   fetchBills()
 }
@@ -334,7 +357,7 @@ onMounted(fetchBills)
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   flex-shrink: 0;
 }
 
@@ -349,6 +372,92 @@ onMounted(fetchBills)
   gap: 12px;
   align-items: center;
   flex-wrap: wrap;
+}
+
+/* ── 楼层卡片筛选 ── */
+.floor-filter {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.floor-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #606266;
+  white-space: nowrap;
+}
+
+.floor-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.floor-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 56px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  background: #f5f7fa;
+  border: 2px solid transparent;
+  color: #606266;
+}
+
+.floor-card:hover {
+  background: #ecf5ff;
+  border-color: #b3d8ff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.12);
+}
+
+.floor-card.active {
+  background: #409eff;
+  border-color: #409eff;
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(64, 158, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.floor-num {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.floor-desc {
+  font-size: 11px;
+  opacity: 0.75;
+  line-height: 1.2;
+}
+
+.floor-card.active .floor-desc {
+  opacity: 0.9;
+}
+
+.floor-check {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #67c23a;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(103, 194, 58, 0.4);
 }
 
 .table-wrapper {
