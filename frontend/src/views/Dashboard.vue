@@ -141,17 +141,13 @@
             已缴费
             <span class="col-count">{{ paidCount }}</span>
           </div>
-          <div class="scroll-wrap" ref="paidScrollRef" v-if="paidList.length > 0">
-            <div class="scroll-content">
-              <div class="scroll-item" v-for="item in paidList" :key="item.id">
-                <span class="si-room">{{ item.room_no }}</span>
-                <span class="si-money">{{ item.total_cost }}元</span>
-              </div>
+          <div class="recent-items" v-if="paidList.length > 0">
+            <div class="sc-item" v-for="item in paidList" :key="item.id">
+              <span class="si-room">{{ item.room_no }}</span>
+              <span class="si-money">{{ item.total_cost }}元</span>
             </div>
           </div>
-          <div class="scroll-empty" v-else>
-            <span>暂无已缴费记录</span>
-          </div>
+          <div class="recent-empty" v-else>暂无已缴费记录</div>
         </div>
         <div class="col-divider" />
         <!-- 右侧：待缴费 -->
@@ -161,17 +157,13 @@
             待缴费
             <span class="col-count">{{ unpaidCount }}</span>
           </div>
-          <div class="scroll-wrap" ref="unpaidScrollRef" v-if="unpaidList.length > 0">
-            <div class="scroll-content">
-              <div class="scroll-item" v-for="item in unpaidList" :key="item.id">
-                <span class="si-room">{{ item.room_no }}</span>
-                <span class="si-money">{{ item.total_cost }}元</span>
-              </div>
+          <div class="recent-items" v-if="unpaidList.length > 0">
+            <div class="sc-item" v-for="item in unpaidList" :key="item.id">
+              <span class="si-room">{{ item.room_no }}</span>
+              <span class="si-money">{{ item.total_cost }}元</span>
             </div>
           </div>
-          <div class="scroll-empty" v-else>
-            <span>暂无待缴费房间</span>
-          </div>
+          <div class="recent-empty" v-else>暂无待缴费房间</div>
         </div>
       </div>
     </div>
@@ -179,7 +171,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { getBillList, getRooms } from '../api'
 
 const bills = ref([])
@@ -189,11 +181,6 @@ const currentYear = now.getFullYear()
 const currentMonthNum = now.getMonth() + 1
 const currentMonth = `${currentYear}年${String(currentMonthNum).padStart(2, '0')}月`
 const nowStr = ref(getNowStr())
-
-// 滚动容器 ref
-const paidScrollRef = ref(null)
-const unpaidScrollRef = ref(null)
-let scrollAnimId = null
 
 function getNowStr() {
   const d = new Date()
@@ -259,64 +246,6 @@ const unpaidList = computed(() =>
     .filter(b => !b.is_paid)
 )
 
-// 滚动动画
-function smoothScroll(el, speed) {
-  if (!el) return
-  const maxScroll = el.scrollHeight - el.clientHeight
-  if (maxScroll <= 0) return
-
-  let startTime = null
-  const duration = Math.max(3000, Math.min(12000, maxScroll / speed * 1000))
-
-  function step(timestamp) {
-    if (!startTime) startTime = timestamp
-    const elapsed = timestamp - startTime
-    const progress = Math.min(elapsed / duration, 1)
-
-    // ease-in-out
-    const ease = progress < 0.5
-      ? 2 * progress * progress
-      : 1 - Math.pow(-2 * progress + 2, 2) / 2
-
-    el.scrollTop = ease * maxScroll
-
-    if (progress < 1) {
-      scrollAnimId = requestAnimationFrame(step)
-    } else {
-      // pause at bottom
-      setTimeout(() => {
-        // snap back to top smoothly
-        el.scrollTo({ top: 0, behavior: 'smooth' })
-        // wait for smooth scroll to finish, then restart
-        setTimeout(() => {
-          startAutoScroll(el, speed)
-        }, 400)
-      }, 1200)
-    }
-  }
-
-  scrollAnimId = requestAnimationFrame(step)
-}
-
-function startAutoScroll(el, speed) {
-  if (!el) return
-  const maxScroll = el.scrollHeight - el.clientHeight
-  if (maxScroll <= 0) return
-  smoothScroll(el, speed)
-}
-
-function initScrolls() {
-  // small delay for DOM settle (data-triggered re-render)
-  setTimeout(() => {
-    startAutoScroll(paidScrollRef.value, 30)
-    startAutoScroll(unpaidScrollRef.value, 30)
-  }, 200)
-}
-
-onBeforeUnmount(() => {
-  if (scrollAnimId) cancelAnimationFrame(scrollAnimId)
-})
-
 const trendClass = computed(() => 'trend-up')
 const trendText = computed(() => '—')
 
@@ -334,8 +263,6 @@ async function fetchData() {
     ])
     bills.value = billRes.data || []
     allRooms.value = roomRes.data || []
-    // 数据加载后启动滚动
-    nextTick(() => initScrolls())
   } catch { /* ignored */ }
 }
 
@@ -604,7 +531,6 @@ onMounted(fetchData)
   padding: 16px 20px;
   border: 1px solid #ebeef5;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-  flex: 1;
   min-height: 0;
   overflow: hidden;
   display: flex;
@@ -627,19 +553,17 @@ onMounted(fetchData)
 
 /* 双列布局 */
 .recent-columns {
-  flex: 1;
-  min-height: 0;
   display: grid;
   grid-template-columns: 1fr 1px 1fr;
   gap: 0;
   padding-top: 8px;
+  min-height: 0;
 }
 
 .recent-col {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  overflow: hidden;
 }
 
 .col-divider {
@@ -684,24 +608,18 @@ onMounted(fetchData)
   color: #f56c6c;
 }
 
-/* 滚动容器 */
-.scroll-wrap {
+/* 列表区域 - 自适应高度 */
+.recent-items {
+  overflow-y: auto;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
-  position: relative;
 }
 
-.scroll-content {
-  display: flex;
-  flex-direction: column;
-}
-
-.scroll-item {
+.sc-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 7px 8px;
+  padding: 6px 8px;
   border-bottom: 1px solid #f5f7fa;
   gap: 8px;
 }
@@ -720,7 +638,7 @@ onMounted(fetchData)
   white-space: nowrap;
 }
 
-.scroll-empty {
+.recent-empty {
   flex: 1;
   display: flex;
   align-items: center;
