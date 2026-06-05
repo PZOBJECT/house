@@ -14,7 +14,12 @@
 
     <!-- 楼层筛选 — 大卡片按钮 -->
     <div class="floor-filter">
-      <span class="floor-label">楼层</span>
+      <span class="floor-label">
+        <svg class="floor-icon" viewBox="0 0 24 24" width="16" height="16">
+          <path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3l-3-2.7z" fill="currentColor"/>
+        </svg>
+        楼层
+      </span>
       <div class="floor-buttons">
         <div
           v-for="f in floorOptions"
@@ -218,16 +223,28 @@ onMounted(fetchRooms)
 .floor-filter {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   margin-bottom: 12px;
   flex-shrink: 0;
 }
 
 .floor-label {
-  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 13px;
+  background: #edf2f7;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: 600;
-  color: #606266;
+  color: #4a5568;
   white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+.floor-icon {
+  flex-shrink: 0;
+  opacity: 0.8;
 }
 
 .floor-buttons {

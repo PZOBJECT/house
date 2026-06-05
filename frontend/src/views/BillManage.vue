@@ -20,7 +20,12 @@
 
     <!-- 楼层筛选 — 大卡片按钮 -->
     <div class="floor-filter">
-      <span class="floor-label">楼层</span>
+      <span class="floor-label">
+        <svg class="floor-icon" viewBox="0 0 24 24" width="16" height="16">
+          <path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3l-3-2.7z" fill="currentColor"/>
+        </svg>
+        楼层
+      </span>
       <div class="floor-buttons">
         <div
           v-for="f in floorOptions"
@@ -40,7 +45,7 @@
     <div class="table-wrapper">
       <el-table
         ref="tableRef"
-        :data="pagedBills"
+        :data="bills"
         border
         stripe
         v-loading="loading"
@@ -112,18 +117,6 @@
       </el-table>
     </div>
 
-    <!-- 分页 -->
-    <div class="page-footer">
-      <el-pagination
-        v-model:current-page="currentPage"
-        :page-size="9"
-        :total="bills.length"
-        layout="total, prev, pager, next"
-        background
-        small
-      />
-    </div>
-
     <!-- 修改读数对话框 -->
     <el-dialog v-model="meterDialog.visible" :title="meterDialog.title" width="400px">
       <el-form label-width="120px">
@@ -154,8 +147,7 @@ import ReceiptDialog from './ReceiptDialog.vue'
 const bills = ref([])
 const loading = ref(false)
 const receiptDialogRef = ref(null)
-const filterFloor = ref(undefined)
-const currentPage = ref(1)
+const filterFloor = ref(2)
 
 const floorOptions = [
   { value: undefined, label: '全部', desc: '2-5楼' },
@@ -171,11 +163,6 @@ const selectedMonth = ref(`${now.getFullYear()}-${String(now.getMonth() + 1).pad
 const queryParams = computed(() => {
   const [y, m] = selectedMonth.value.split('-')
   return { year: parseInt(y), month: parseInt(m) }
-})
-
-const pagedBills = computed(() => {
-  const start = (currentPage.value - 1) * 9
-  return bills.value.slice(start, start + 9)
 })
 
 const meterDialog = reactive({
@@ -218,13 +205,11 @@ function getSummaries({ columns, data }) {
 }
 
 function onMonthChange() {
-  currentPage.value = 1
   fetchBills()
 }
 
 function selectFloor(val) {
   filterFloor.value = val
-  currentPage.value = 1
   fetchBills()
 }
 
@@ -378,16 +363,28 @@ onMounted(fetchBills)
 .floor-filter {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   margin-bottom: 10px;
   flex-shrink: 0;
 }
 
 .floor-label {
-  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 13px;
+  background: #edf2f7;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: 600;
-  color: #606266;
+  color: #4a5568;
   white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+.floor-icon {
+  flex-shrink: 0;
+  opacity: 0.8;
 }
 
 .floor-buttons {
@@ -466,23 +463,12 @@ onMounted(fetchBills)
   overflow: hidden;
 }
 
-.table-wrapper :deep(.el-table__body-wrapper) {
-  /* ensure remaining space is used */
-}
-
 .table-wrapper :deep(.el-table__row) {
   height: 48px;
 }
 
 .table-wrapper :deep(.el-table__row td) {
   padding: 6px 0;
-}
-
-.page-footer {
-  display: flex;
-  justify-content: center;
-  padding: 12px 0 4px;
-  flex-shrink: 0;
 }
 
 :deep(.paid-row) {
