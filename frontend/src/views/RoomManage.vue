@@ -6,8 +6,8 @@
       <div class="header-actions">
         <el-radio-group v-model="filterRented" @change="fetchRooms" class="status-filter">
           <el-radio-button :value="undefined">全部</el-radio-button>
-          <el-radio-button :value="1">已出租</el-radio-button>
-          <el-radio-button :value="0">未出租</el-radio-button>
+          <el-radio-button :value="1">已租</el-radio-button>
+          <el-radio-button :value="0">未租</el-radio-button>
         </el-radio-group>
       </div>
     </div>
@@ -29,7 +29,7 @@
           <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor"/>
         </svg>
         <div class="stat-body">
-          <span class="stat-label">已出租</span>
+          <span class="stat-label">已租</span>
           <span class="stat-value">{{ statsRented }}<span class="stat-unit">间</span></span>
         </div>
       </div>
@@ -39,7 +39,7 @@
           <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" fill="currentColor"/>
         </svg>
         <div class="stat-body">
-          <span class="stat-label">未出租</span>
+          <span class="stat-label">未租</span>
           <span class="stat-value">{{ statsUnrented }}<span class="stat-unit">间</span></span>
         </div>
       </div>
@@ -123,8 +123,8 @@
               v-model="row.is_rented"
               :active-value="1"
               :inactive-value="0"
-              active-text="已出租"
-              inactive-text="未出租"
+              active-text="已租"
+              inactive-text="未租"
               @change="handleRentedChange(row)"
             />
           </template>
