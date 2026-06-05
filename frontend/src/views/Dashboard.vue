@@ -42,12 +42,12 @@
         </div>
       </div>
 
-      <div class="kpi-card card-unpaid">
+      <div class="kpi-card card-unpaid" style="cursor: pointer" @click="showUnpaidDialog">
         <div class="kpi-icon-wrap">
           <svg viewBox="0 0 24 24" width="28" height="28"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" fill="currentColor"/></svg>
         </div>
         <div class="kpi-body">
-          <span class="kpi-label">未缴费</span>
+          <span class="kpi-label">未缴费 — 点击查看</span>
           <span class="kpi-value">{{ unpaidCount }}<span class="kpi-unit">间</span></span>
         </div>
         <div class="kpi-hint">待催收</div>
@@ -127,52 +127,31 @@
       </div>
     </div>
 
-    <!-- 底部已缴费 / 待缴费 -->
-    <div class="recent-section">
-      <div class="recent-header">
-        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" fill="currentColor"/></svg>
-        <span>缴费明细</span>
-      </div>
-      <div class="recent-columns">
-        <!-- 左侧：已缴费 -->
-        <div class="recent-col col-paid">
-          <div class="col-header">
-            <svg viewBox="0 0 24 24" width="14" height="14"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor"/></svg>
-            已缴费
-            <span class="col-count">{{ paidCount }}</span>
-          </div>
-          <div class="recent-items" v-if="paidList.length > 0">
-            <div class="sc-item" v-for="item in paidList" :key="item.id">
-              <span class="si-room">{{ item.room_no }}</span>
-              <span class="si-money">{{ item.total_cost }}元</span>
-            </div>
-          </div>
-          <div class="recent-empty" v-else>暂无已缴费记录</div>
+    <!-- 未缴费列表弹窗 -->
+    <el-dialog v-model="unpaidDialogVisible" title="待缴费房间" width="500px" top="10vh">
+      <div class="unpaid-list" v-if="unpaidList.length > 0">
+        <div class="unpaid-header">
+          <span class="uh-room">房间号</span>
+          <span class="uh-cost">总费用</span>
+          <span class="uh-action">操作</span>
         </div>
-        <div class="col-divider" />
-        <!-- 右侧：待缴费 -->
-        <div class="recent-col col-unpaid">
-          <div class="col-header">
-            <svg viewBox="0 0 24 24" width="14" height="14"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" fill="currentColor"/></svg>
-            待缴费
-            <span class="col-count">{{ unpaidCount }}</span>
-          </div>
-          <div class="recent-items" v-if="unpaidList.length > 0">
-            <div class="sc-item" v-for="item in unpaidList" :key="item.id">
-              <span class="si-room">{{ item.room_no }}</span>
-              <span class="si-money">{{ item.total_cost }}元</span>
-            </div>
-          </div>
-          <div class="recent-empty" v-else>暂无待缴费房间</div>
+        <div class="unpaid-row" v-for="item in unpaidList" :key="item.id">
+          <span class="ur-room">{{ item.room_no }}</span>
+          <span class="ur-cost">{{ item.total_cost }}元</span>
+          <span class="ur-action">
+            <el-button type="success" size="small" @click="markAsPaid(item)">标记已缴费</el-button>
+          </span>
         </div>
       </div>
-    </div>
+      <div class="unpaid-empty" v-else>🎉 本月所有房间已完成缴费</div>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { getBillList, getRooms } from '../api'
+import { getBillList, getRooms, payBill } from '../api'
+import { ElMessage } from 'element-plus'
 
 const bills = ref([])
 const allRooms = ref([])
@@ -181,6 +160,7 @@ const currentYear = now.getFullYear()
 const currentMonthNum = now.getMonth() + 1
 const currentMonth = `${currentYear}年${String(currentMonthNum).padStart(2, '0')}月`
 const nowStr = ref(getNowStr())
+const unpaidDialogVisible = ref(false)
 
 function getNowStr() {
   const d = new Date()
@@ -234,13 +214,7 @@ const rentedCount = computed(() => allRooms.value.filter(r => r.is_rented === 1)
 const totalRooms = computed(() => allRooms.value.length)
 const occupancyPercent = computed(() => totalRooms.value > 0 ? Math.round((rentedCount.value / totalRooms.value) * 100) : 0)
 
-// 已缴费 / 待缴费列表
-const paidList = computed(() =>
-  [...bills.value]
-    .filter(b => b.is_paid && b.paid_at)
-    .sort((a, b) => new Date(b.paid_at) - new Date(a.paid_at))
-)
-
+// 待缴费列表
 const unpaidList = computed(() =>
   [...bills.value]
     .filter(b => !b.is_paid)
@@ -249,11 +223,21 @@ const unpaidList = computed(() =>
 const trendClass = computed(() => 'trend-up')
 const trendText = computed(() => '—')
 
-function formatDate(dateStr) {
-  if (!dateStr) return '-'
-  const d = new Date(dateStr)
-  return `${d.getMonth() + 1}月${d.getDate()}日`
+function showUnpaidDialog() {
+  unpaidDialogVisible.value = true
 }
+
+async function markAsPaid(item) {
+  try {
+    await payBill(item.id)
+    ElMessage.success(`${item.room_no} 已标记为已缴费`)
+    unpaidDialogVisible.value = false
+    // 刷新数据
+    await fetchData()
+  } catch {
+    ElMessage.error('操作失败，请重试')
+  }
+} 
 
 async function fetchData() {
   try {
@@ -529,126 +513,65 @@ onMounted(fetchData)
   flex-shrink: 0;
 }
 
-/* ── 已缴费 / 待缴费 ── */
-.recent-section {
-  background: #fff;
-  border-radius: 14px;
-  padding: 16px 20px;
-  border: 1px solid #ebeef5;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-  min-height: 0;
-  overflow: hidden;
+/* ── 未缴费弹窗列表 ── */
+.unpaid-list {
   display: flex;
   flex-direction: column;
+  max-height: 50vh;
+  overflow-y: auto;
 }
 
-.recent-header {
-  display: flex;
+.unpaid-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 10px 12px;
+  background: #f5f7fa;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #909399;
+  text-align: center;
+  margin-bottom: 4px;
+  flex-shrink: 0;
+}
+
+.unpaid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
-  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #f0f2f5;
+  text-align: center;
+}
+
+.unpaid-row:last-child {
+  border-bottom: none;
+}
+
+.ur-room {
   font-size: 15px;
   font-weight: 700;
   color: #303133;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f0f2f5;
-  flex-shrink: 0;
 }
 
-.recent-header svg { color: #409eff; }
-
-/* 双列布局 */
-.recent-columns {
-  display: grid;
-  grid-template-columns: 1fr 1px 1fr;
-  gap: 0;
-  padding-top: 8px;
-  min-height: 0;
-}
-
-.recent-col {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.col-divider {
-  width: 1px;
-  background: #ebeef5;
-  margin: 0 12px;
-}
-
-.col-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #606266;
-  padding: 0 4px 8px 4px;
-  flex-shrink: 0;
-}
-
-.col-paid .col-header { color: #67c23a; }
-.col-unpaid .col-header { color: #f56c6c; }
-
-.col-count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 20px;
-  height: 18px;
-  padding: 0 6px;
-  border-radius: 9px;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.col-paid .col-count {
-  background: #f0f9eb;
-  color: #67c23a;
-}
-
-.col-unpaid .col-count {
-  background: #fef0f0;
-  color: #f56c6c;
-}
-
-/* 列表区域 - 自适应高度 */
-.recent-items {
-  overflow-y: auto;
-  flex: 1;
-  min-height: 0;
-}
-
-.sc-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 6px 8px;
-  border-bottom: 1px solid #f5f7fa;
-  gap: 8px;
-}
-
-.si-room {
-  font-size: 14px;
-  font-weight: 700;
-  color: #303133;
-  white-space: nowrap;
-}
-
-.si-money {
-  font-size: 14px;
+.ur-cost {
+  font-size: 15px;
   font-weight: 700;
   color: #e6a23c;
-  white-space: nowrap;
 }
 
-.recent-empty {
-  flex: 1;
+.ur-action {
+  display: flex;
+  justify-content: center;
+}
+
+.unpaid-empty {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #c0c4cc;
-  font-size: 13px;
+  height: 80px;
+  color: #67c23a;
+  font-size: 15px;
+  font-weight: 500;
 }
 </style>
