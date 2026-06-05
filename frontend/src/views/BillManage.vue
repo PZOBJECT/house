@@ -5,12 +5,14 @@
       <div class="header-left">
         <h2>月度账单</h2>
         <span class="paid-badge">
-          <svg viewBox="0 0 24 24" width="12" height="12"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor"/></svg>
-          已收费 {{ paidCount }}
+          <svg class="badge-icon" viewBox="0 0 24 24" width="14" height="14"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor"/></svg>
+          <span class="badge-num">{{ paidCount }}</span>
+          <span class="badge-text">已缴费</span>
         </span>
         <span class="unpaid-badge">
-          <svg viewBox="0 0 24 24" width="12" height="12"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" fill="currentColor"/></svg>
-          未收费 {{ unpaidCount }}
+          <svg class="badge-icon" viewBox="0 0 24 24" width="14" height="14"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" fill="currentColor"/></svg>
+          <span class="badge-num">{{ unpaidCount }}</span>
+          <span class="badge-text">未缴费</span>
         </span>
       </div>
       <div class="filter-bar">
@@ -392,30 +394,51 @@ onMounted(fetchBills)
   color: #303133;
 }
 
-/* 已收费/未收费徽章 */
+/* 已缴费/未缴费徽章 */
 .paid-badge,
 .unpaid-badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 3px 10px;
+  gap: 3px;
+  padding: 3px 12px 3px 10px;
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .paid-badge {
-  background: #f0f9eb;
+  background: linear-gradient(135deg, #f0f9eb, #e8f5e0);
   color: #67c23a;
-  border: 1px solid #e1f3d8;
+  border: 1px solid #c8e6b5;
+  box-shadow: 0 1px 3px rgba(103, 194, 58, 0.15);
 }
 
 .unpaid-badge {
-  background: #fef0f0;
+  background: linear-gradient(135deg, #fef0f0, #fde8e8);
   color: #f56c6c;
-  border: 1px solid #fde2e2;
+  border: 1px solid #fbc4c4;
+  box-shadow: 0 1px 3px rgba(245, 108, 108, 0.15);
+}
+
+.badge-icon {
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+.badge-num {
+  font-size: 16px;
+  font-weight: 800;
+  min-width: 16px;
+  text-align: center;
+  margin-right: 1px;
+}
+
+.badge-text {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.85;
 }
 
 /* 日期+按钮筛选栏 */
