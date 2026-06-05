@@ -2,7 +2,17 @@
   <div class="bill-manage">
     <!-- 头部 -->
     <div class="page-header">
-      <h2>月度账单</h2>
+      <div class="header-left">
+        <h2>月度账单</h2>
+        <span class="paid-badge">
+          <svg viewBox="0 0 24 24" width="12" height="12"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor"/></svg>
+          已收费 {{ paidCount }}
+        </span>
+        <span class="unpaid-badge">
+          <svg viewBox="0 0 24 24" width="12" height="12"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" fill="currentColor"/></svg>
+          未收费 {{ unpaidCount }}
+        </span>
+      </div>
       <div class="filter-bar">
         <el-date-picker
           v-model="selectedMonth"
@@ -26,8 +36,18 @@
       </div>
       <div class="stat-divider" />
       <div class="stat-item">
+        <span class="stat-label">⚡ 用电量</span>
+        <span class="stat-value stat-purple">{{ calcTotal('elec_usage') }}<span class="stat-unit">度</span></span>
+      </div>
+      <div class="stat-divider" />
+      <div class="stat-item">
         <span class="stat-label">电费合计</span>
         <span class="stat-value stat-blue">{{ calcTotal('elec_cost') }}<span class="stat-unit">元</span></span>
+      </div>
+      <div class="stat-divider" />
+      <div class="stat-item">
+        <span class="stat-label">💧 用水量</span>
+        <span class="stat-value stat-aqua">{{ calcTotal('water_usage') }}<span class="stat-unit">吨</span></span>
       </div>
       <div class="stat-divider" />
       <div class="stat-item">
@@ -201,6 +221,9 @@ const meterDialog = reactive({
   lastEditable: false
 })
 
+const paidCount = computed(() => bills.value.filter(b => b.is_paid).length)
+const unpaidCount = computed(() => bills.value.filter(b => !b.is_paid).length)
+
 function calcTotal(prop) {
   let total = 0
   bills.value.forEach(row => {
@@ -357,10 +380,42 @@ onMounted(fetchBills)
   flex-shrink: 0;
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .page-header h2 {
   margin: 0;
   font-size: 20px;
   color: #303133;
+}
+
+/* 已收费/未收费徽章 */
+.paid-badge,
+.unpaid-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.paid-badge {
+  background: #f0f9eb;
+  color: #67c23a;
+  border: 1px solid #e1f3d8;
+}
+
+.unpaid-badge {
+  background: #fef0f0;
+  color: #f56c6c;
+  border: 1px solid #fde2e2;
 }
 
 /* 日期+按钮筛选栏 */
@@ -400,7 +455,7 @@ onMounted(fetchBills)
   flex-shrink: 0;
   background: #f5f7fa;
   border-radius: 10px;
-  padding: 10px 16px;
+  padding: 8px 12px;
   border: 1px solid #e8ecf1;
 }
 
@@ -408,41 +463,44 @@ onMounted(fetchBills)
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 1px;
   flex: 1;
   min-width: 0;
 }
 
 .stat-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   color: #909399;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
 }
 
 .stat-value {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: #303133;
   line-height: 1.3;
 }
 
 .stat-unit {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   margin-left: 2px;
   opacity: 0.7;
 }
 
 .stat-blue { color: #409eff; }
+.stat-purple { color: #7c3aed; }
+.stat-aqua { color: #0ea5e9; }
 .stat-orange { color: #e6a23c; }
 .stat-red { color: #f56c6c; }
 
 .stat-divider {
   width: 1px;
-  height: 34px;
+  height: 30px;
   background: #e0e4ea;
-  margin: 0 4px;
+  margin: 0 3px;
   flex-shrink: 0;
 }
 
