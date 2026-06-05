@@ -140,7 +140,8 @@ import ReceiptDialog from './ReceiptDialog.vue'
 const bills = ref([])
 const loading = ref(false)
 const receiptDialogRef = ref(null)
-const selectedMonth = ref('')
+const now = new Date()
+const selectedMonth = ref(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`)
 const filterPaid = ref(undefined)
 const filterFloor = ref(undefined)
 

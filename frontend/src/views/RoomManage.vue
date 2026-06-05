@@ -12,6 +12,49 @@
       </div>
     </div>
 
+    <!-- 出租统计栏 -->
+    <div class="stats-bar">
+      <div class="stat-item stat-total">
+        <svg class="stat-icon" viewBox="0 0 24 24" width="18" height="18">
+          <path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3l-3-2.7z" fill="currentColor"/>
+        </svg>
+        <div class="stat-body">
+          <span class="stat-label">总房间</span>
+          <span class="stat-value">{{ statsTotal }}<span class="stat-unit">间</span></span>
+        </div>
+      </div>
+      <div class="stat-divider" />
+      <div class="stat-item stat-rented">
+        <svg class="stat-icon" viewBox="0 0 24 24" width="18" height="18">
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor"/>
+        </svg>
+        <div class="stat-body">
+          <span class="stat-label">已出租</span>
+          <span class="stat-value">{{ statsRented }}<span class="stat-unit">间</span></span>
+        </div>
+      </div>
+      <div class="stat-divider" />
+      <div class="stat-item stat-unrented">
+        <svg class="stat-icon" viewBox="0 0 24 24" width="18" height="18">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" fill="currentColor"/>
+        </svg>
+        <div class="stat-body">
+          <span class="stat-label">未出租</span>
+          <span class="stat-value">{{ statsUnrented }}<span class="stat-unit">间</span></span>
+        </div>
+      </div>
+      <div class="stat-divider" />
+      <div class="stat-item stat-rate">
+        <svg class="stat-icon" viewBox="0 0 24 24" width="18" height="18">
+          <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" fill="currentColor"/>
+        </svg>
+        <div class="stat-body">
+          <span class="stat-label">出租率</span>
+          <span class="stat-value">{{ statsRate }}<span class="stat-unit">%</span></span>
+        </div>
+      </div>
+    </div>
+
     <!-- 楼层筛选 — 大卡片按钮 -->
     <div class="floor-filter">
       <span class="floor-label">
@@ -114,6 +157,13 @@ const filterFloor = ref(2)
 const editingRoom = ref(null)
 const editForm = reactive({ rent_price: '', elec_price: '', water_price: '' })
 
+// 全局统计数据（不受筛选影响）
+const allRooms = ref([])
+const statsTotal = ref(0)
+const statsRented = ref(0)
+const statsUnrented = ref(0)
+const statsRate = ref(0)
+
 const floorOptions = [
   { value: undefined, label: '全部', desc: '2-5楼' },
   { value: 2, label: '2楼', desc: '201-209' },
@@ -125,6 +175,22 @@ const floorOptions = [
 function selectFloor(val) {
   filterFloor.value = val
   fetchRooms()
+}
+
+function updateStats(data) {
+  allRooms.value = data
+  statsTotal.value = data.length
+  const rented = data.filter(r => r.is_rented === 1)
+  statsRented.value = rented.length
+  statsUnrented.value = data.length - rented.length
+  statsRate.value = data.length > 0 ? Math.round((rented.length / data.length) * 100) : 0
+}
+
+async function fetchStats() {
+  try {
+    const res = await getRooms(undefined, undefined)
+    updateStats(res.data || [])
+  } catch { /* ignore */ }
 }
 
 async function fetchRooms() {
@@ -174,12 +240,17 @@ async function handleRentedChange(row) {
   try {
     await updateRoom(row.room_no, { is_rented: row.is_rented })
     ElMessage.success('状态已更新')
+    // 同步刷新统计数据
+    await fetchStats()
   } catch {
     row.is_rented = row.is_rented === 1 ? 0 : 1
   }
 }
 
-onMounted(fetchRooms)
+onMounted(async () => {
+  await fetchStats()
+  await fetchRooms()
+})
 </script>
 
 <style scoped>
@@ -217,6 +288,87 @@ onMounted(fetchRooms)
 .status-filter :deep(.el-radio-button__inner) {
   font-size: 14px;
   padding: 8px 20px;
+}
+
+/* ── 出租统计栏 ── */
+.stats-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #f8f9fc 0%, #f0f4ff 100%);
+  border-radius: 12px;
+  padding: 12px 18px;
+  border: 1px solid #e4e9f2;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  padding: 0 4px;
+}
+
+.stat-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.stat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.stat-unit {
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 2px;
+  opacity: 0.7;
+}
+
+/* 各项目不同的颜色 */
+.stat-total .stat-icon { color: #606266; }
+.stat-total .stat-label { color: #909399; }
+.stat-total .stat-value { color: #303133; }
+
+.stat-rented .stat-icon { color: #67c23a; }
+.stat-rented .stat-label { color: #67c23a; }
+.stat-rented .stat-value { color: #67c23a; }
+
+.stat-unrented .stat-icon { color: #e6a23c; }
+.stat-unrented .stat-label { color: #e6a23c; }
+.stat-unrented .stat-value { color: #e6a23c; }
+
+.stat-rate .stat-icon { color: #409eff; }
+.stat-rate .stat-label { color: #409eff; }
+.stat-rate .stat-value { color: #409eff; }
+
+.stat-divider {
+  width: 1px;
+  height: 40px;
+  background: #e0e4ea;
+  margin: 0 8px;
+  flex-shrink: 0;
 }
 
 /* ── 楼层卡片筛选 ── */
