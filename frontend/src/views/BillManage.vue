@@ -90,8 +90,7 @@
     <el-dialog v-model="meterDialog.visible" :title="meterDialog.title" width="400px">
       <el-form label-width="120px">
         <el-form-item label="上月读数">
-          <el-input v-if="meterDialog.lastEditable" v-model="meterDialog.last" placeholder="请输入上月读数" />
-          <el-input v-else :model-value="meterDialog.last" disabled />
+          <el-input v-model="meterDialog.last" placeholder="请输入上月读数" />
         </el-form-item>
         <el-form-item label="本月读数">
           <el-input v-model="meterDialog.current" placeholder="请输入本月读数" />
@@ -201,53 +200,48 @@ function openMeterDialog(row, type) {
   meterDialog.type = type
   if (type === 'elec') {
     meterDialog.title = `修改电表读数 - ${row.room_no}`
-    const hasLast = row.elec_last !== null && row.elec_last !== undefined && row.elec_last !== 0
-    meterDialog.lastEditable = !hasLast
-    meterDialog.last = hasLast ? row.elec_last : ''
+    meterDialog.lastEditable = true
+    meterDialog.last = row.elec_last ?? ''
     meterDialog.current = row.elec_current ?? ''
   } else {
     meterDialog.title = `修改水表读数 - ${row.room_no}`
-    const hasLast = row.water_last !== null && row.water_last !== undefined && row.water_last !== 0
-    meterDialog.lastEditable = !hasLast
-    meterDialog.last = hasLast ? row.water_last : ''
+    meterDialog.lastEditable = true
+    meterDialog.last = row.water_last ?? ''
     meterDialog.current = row.water_current ?? ''
   }
   meterDialog.visible = true
 }
 
 async function saveMeter() {
-  let lastVal = null
-  if (meterDialog.lastEditable) {
-    lastVal = parseFloat(meterDialog.last)
-    if (isNaN(lastVal) || lastVal < 0) {
-      ElMessage.warning('请输入有效的上月读数')
-      return
-    }
-  }
-  const val = parseFloat(meterDialog.current)
-  if (isNaN(val) || val < 0) {
+  // 解析本月读数（必填）
+  const currentVal = parseFloat(meterDialog.current)
+  if (isNaN(currentVal) || currentVal < 0) {
     ElMessage.warning('请输入有效的本月读数')
     return
   }
-  // 检查读数是否低于上月读数（仅当有上月读数时才校验）
-  const existingLast = parseFloat(meterDialog.last)
-  if (!isNaN(existingLast) && val < existingLast) {
+
+  // 解析上月读数（选填 — 空则不更新，保留原值）
+  const lastVal = meterDialog.last === '' ? null : parseFloat(meterDialog.last)
+  if (lastVal !== null && (isNaN(lastVal) || lastVal < 0)) {
+    ElMessage.warning('请输入有效的上月读数')
+    return
+  }
+
+  // 校验：本月读数不能低于上月读数
+  if (lastVal !== null && currentVal < lastVal) {
     ElMessage.warning('本月读数不能低于上月读数')
     return
   }
-  const data = {}
+
+  const payload = {}
   if (meterDialog.type === 'elec') {
-    data.elec_current = val
-    if (meterDialog.lastEditable && lastVal !== null) {
-      data.elec_last = lastVal
-    }
+    payload.elec_current = currentVal
+    if (lastVal !== null) payload.elec_last = lastVal
   } else {
-    data.water_current = val
-    if (meterDialog.lastEditable && lastVal !== null) {
-      data.water_last = lastVal
-    }
+    payload.water_current = currentVal
+    if (lastVal !== null) payload.water_last = lastVal
   }
-  await updateBill(meterDialog.billId, data)
+  await updateBill(meterDialog.billId, payload)
   ElMessage.success('读数已更新')
   meterDialog.visible = false
   await fetchBills()

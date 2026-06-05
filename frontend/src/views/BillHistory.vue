@@ -30,6 +30,11 @@
 
     <el-table :data="bills" border stripe v-loading="loading" empty-text="暂无历史账单" :row-class-name="tableRowClassName" show-summary :summary-method="getSummaries">
       <el-table-column prop="room_no" label="房间号" width="90" align="center" />
+      <el-table-column label="归属月份" width="100" align="center">
+        <template #default="{ row }">
+          {{ row.year }}年{{ String(row.month).padStart(2, '0') }}月
+        </template>
+      </el-table-column>
       <el-table-column label="电表读数" align="center">
         <el-table-column prop="elec_last" label="上月" width="90" align="center" />
         <el-table-column prop="elec_current" label="本月" width="90" align="center" />
