@@ -477,8 +477,13 @@ onMounted(fetchData)
 }
 
 .card-elec .detail-card-header { color: #e6a23c; }
+.card-elec { background: linear-gradient(135deg, #fffbf0, #fff8e1); }
+
 .card-water .detail-card-header { color: #409eff; }
+.card-water { background: linear-gradient(135deg, #f0f9ff, #e6f4ff); }
+
 .card-rent .detail-card-header { color: #67c23a; }
+.card-rent { background: linear-gradient(135deg, #f0faf0, #e8f5e0); }
 
 .detail-card-body {
   display: flex;
