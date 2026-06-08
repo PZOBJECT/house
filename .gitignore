@@ -22,3 +22,8 @@ Thumbs.db
 
 # 日志
 *.log
+
+# OpenDesign 生成的设计物（不提交，每次由 AI 重新生成）
+opendesign/mockups/
+opendesign/design-systems/
+opendesign/manifest.json
