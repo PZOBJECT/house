@@ -1,0 +1,129 @@
+/* ============================================================
+   🏠 House Rental Management — Design Tokens
+   Extracted from: Dashboard.vue, RoomManage.vue, BillManage.vue, App.vue
+   ============================================================ */
+
+/* ── 1. Color Palette ──────────────────────────────────────── */
+
+:root {
+  /* ◆ Core Brand Colors */
+  --color-primary:           #409eff;
+  --color-primary-dark:      #337ecc;
+  --color-primary-light:     #ecf5ff;
+  --color-primary-border:    #b3d8ff;
+
+  /* ◆ Semantic Colors */
+  --color-success:           #67c23a;
+  --color-success-light:     #f0f9eb;
+  --color-success-lighter:   #e8f5e0;
+  --color-success-border:    #c8e6b5;
+
+  --color-warning:           #e6a23c;
+  --color-warning-light:     #fffbf0;
+  --color-warning-lighter:   #fff8e1;
+
+  --color-danger:            #f56c6c;
+  --color-danger-light:      #fef0f0;
+  --color-danger-lighter:    #fde8e8;
+  --color-danger-border:     #fbc4c4;
+
+  /* ◆ Info / Neutral */
+  --color-info:              #909399;
+  --color-text-primary:      #303133;
+  --color-text-regular:      #606266;
+  --color-text-secondary:    #909399;
+  --color-text-placeholder:  #c0c4cc;
+
+  /* ◆ Surfaces */
+  --color-bg-page:           #ffffff;
+  --color-bg-subtle:         #f5f7fa;
+  --color-bg-tag:            #f4f4f5;
+  --color-bg-aside:          #f0f2f5;
+  --color-bg-floor-label:    #edf2f7;
+  --color-bg-floor-card:     #f5f7fa;
+  --color-bg-stats:          #f5f7fa;
+
+  /* ◆ Borders */
+  --color-border-base:       #ebeef5;
+  --color-border-light:      #e4e9f2;
+  --color-border-lighter:    #e8ecf1;
+  --color-border-input:      #e0e4ea;
+  --color-border-divider:    #e0e4ea;
+
+  /* ◆ Gradient Definitions */
+  --gradient-header:         linear-gradient(135deg, #409eff, #337ecc);
+  --gradient-income:         linear-gradient(135deg, #667eea, #764ba2);
+  --gradient-paid:           linear-gradient(135deg, #11998e, #38ef7d);
+  --gradient-unpaid:         linear-gradient(135deg, #f093fb, #f5576c);
+  --gradient-occupancy:      linear-gradient(135deg, #4facfe, #00f2fe);
+  --gradient-badge-paid:     linear-gradient(135deg, #f0f9eb, #e8f5e0);
+  --gradient-badge-unpaid:   linear-gradient(135deg, #fef0f0, #fde8e8);
+  --gradient-card-elec:      linear-gradient(135deg, #fffbf0, #fff8e1);
+  --gradient-card-water:     linear-gradient(135deg, #f0f9ff, #e6f4ff);
+  --gradient-card-rent:      linear-gradient(135deg, #f0faf0, #e8f5e0);
+}
+
+/* ── 2. Typography ─────────────────────────────────────────── */
+
+:root {
+  --font-family-base:        'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+                              -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                              Roboto, Helvetica, Arial, sans-serif;
+
+  --font-size-page-title:    20px;
+  --font-size-card-header:   16px;
+  --font-size-kpi-value:     26px;
+  --font-size-metric-value:  24px;
+  --font-size-stat-value:    20px;
+  --font-size-cell-room:     18px;
+  --font-size-cell-value:    17px;
+  --font-size-floor-num:     17px;
+  --font-size-badge-num:     16px;
+  --font-size-list-item:     15px;
+  --font-size-input:         15px;
+  --font-size-btn:           14px;
+  --font-size-label:         13px;
+  --font-size-caption:       12px;
+  --font-size-micro:         11px;
+
+  --font-weight-extrabold:   800;
+  --font-weight-bold:        700;
+  --font-weight-semibold:    600;
+  --font-weight-medium:      500;
+}
+
+/* ── 3. Border Radius ──────────────────────────────────────── */
+
+:root {
+  --radius-card:             14px;
+  --radius-icon-wrap:        12px;
+  --radius-floor-card:       10px;
+  --radius-filter-bar:       10px;
+  --radius-stats-bar:        10px;
+  --radius-btn:              8px;
+  --radius-input:            8px;
+  --radius-floor-label:      8px;
+  --radius-badge:            20px;
+  --radius-progress-track:   3px;
+}
+
+/* ── 4. Shadows ────────────────────────────────────────────── */
+
+:root {
+  --shadow-card:             0 1px 4px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover:       0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-kpi-hover:        0 6px 20px rgba(0, 0, 0, 0.1);
+  --shadow-floor-card-active:0 3px 10px rgba(64, 158, 255, 0.3);
+}
+
+/* ── 5. Spacing ────────────────────────────────────────────── */
+
+:root {
+  --spacing-page-gap:        16px;
+  --spacing-section-gap:     14px;
+  --spacing-card-padding:    18px 20px;
+  --spacing-filter-padding:  5px 10px;
+  --gap-grid:                14px;
+  --gap-header-items:        8px;
+  --gap-floor-items:         12px;
+}

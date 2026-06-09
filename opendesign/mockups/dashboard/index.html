@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据大屏 — House 出租房管理系统</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#409eff;--primary-dark:#337ecc;
+  --success:#67c23a;--danger:#f56c6c;--warning:#e6a23c;
+  --text:#303133;--text2:#606266;--text3:#909399;
+  --bg:#f0f2f5;--card-bg:#fff;
+  --radius:14px;--shadow:0 1px 4px rgba(0,0,0,.04);
+  --font:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);padding:20px;min-height:100vh}
+/* 顶栏 */
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.top-bar h1{font-size:22px;font-weight:700;display:flex;align-items:center;gap:8px}
+.top-bar h1 svg{color:var(--primary)}
+.time{font-size:13px;color:var(--text3);font-weight:500}
+/* KPI 行 */
+.kpi-row{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:14px;margin-bottom:16px}
+.kpi-card{display:flex;align-items:center;gap:14px;padding:18px 20px;border-radius:var(--radius);color:#fff;position:relative;overflow:hidden;cursor:default;transition:transform .2s,box-shadow .2s}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
+.ki{width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;font-weight:700}
+.kb{display:flex;flex-direction:column;gap:2px}
+.kl{font-size:13px;font-weight:500;opacity:.85}
+.kv{font-size:26px;font-weight:800;line-height:1.2}
+.ku{font-size:14px;font-weight:500;opacity:.7;margin-left:3px}
+.card-income{background:linear-gradient(135deg,#667eea,#764ba2)}
+.card-paid{background:linear-gradient(135deg,#11998e,#38ef7d)}
+.card-unpaid{background:linear-gradient(135deg,#f093fb,#f5576c);cursor:pointer}
+.card-occ{background:linear-gradient(135deg,#4facfe,#00f2fe)}
+.kpi-hint{position:absolute;right:16px;bottom:12px;font-size:12px;font-weight:600;opacity:.7;background:rgba(0,0,0,.15);padding:2px 10px;border-radius:10px}
+/* 详情行 */
+.detail-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px}
+.detail-card{background:var(--card-bg);border-radius:var(--radius);padding:18px 20px;border:1px solid #ebeef5;box-shadow:var(--shadow);transition:transform .2s}
+.detail-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.dch{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;padding-bottom:14px;border-bottom:1px solid #f0f2f5;margin-bottom:14px}
+.dch svg{width:22px;height:22px}
+.card-elec .dch{color:#e6a23c}
+.card-elec{background:linear-gradient(135deg,#fffbf0,#fff8e1)}
+.card-water .dch{color:var(--primary)}
+.card-water{background:linear-gradient(135deg,#f0f9ff,#e6f4ff)}
+.card-rent .dch{color:var(--success)}
+.card-rent{background:linear-gradient(135deg,#f0faf0,#e8f5e0)}
+.dcb{display:flex;align-items:center}
+.dm{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.dm-label{font-size:13px;color:var(--text3);font-weight:500}
+.dm-value{font-size:22px;font-weight:800;color:var(--text)}
+.dm-unit{font-size:13px;font-weight:500;color:var(--text3);margin-left:2px}
+.dm-money{color:var(--warning)}
+.dm-div{width:1px;height:40px;background:#ebeef5;flex-shrink:0}
+/* 底部面板 */
+.section-panel{background:var(--card-bg);border-radius:var(--radius);border:1px solid #ebeef5;box-shadow:var(--shadow);padding:16px 20px}
+.section-title{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:var(--text);padding-bottom:12px;border-bottom:1px solid #f0f2f5}
+.section-title svg{color:var(--primary);width:18px;height:18px}
+.columns{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding-top:10px}
+.col-header{font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.col-green{color:var(--success)}
+.col-red{color:var(--danger)}
+.col-items{display:flex;flex-direction:column;gap:4px}
+.col-item{display:flex;justify-content:space-between;padding:6px 8px;border-bottom:1px solid #f5f7fa;font-size:14px}
+.col-item .room{font-weight:700;color:var(--text)}
+.col-item .money{font-weight:700;color:var(--warning)}
+.col-empty{color:#c0c4cc;font-size:13px;text-align:center;padding:20px}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <h1>
+    <svg viewBox="0 0 24 24" width="24" height="24"><path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3l-3-2.7z" fill="currentColor"/></svg>
+    2026年06月 数据概览
+  </h1>
+  <span class="time">2026年6月8日 14:30</span>
+</div>
+
+<!-- KPI 卡片 -->
+<div class="kpi-row">
+  <div class="kpi-card card-income">
+    <div class="ki">¥</div>
+    <div class="kb"><span class="kl">当月总收入</span><span class="kv">32,560<span class="ku">元</span></span></div>
+  </div>
+  <div class="kpi-card card-paid">
+    <div class="ki">✓</div>
+    <div class="kb"><span class="kl">已缴费</span><span class="kv">24<span class="ku">/30间</span></span></div>
+  </div>
+  <div class="kpi-card card-unpaid">
+    <div class="ki">✕</div>
+    <div class="kb"><span class="kl">未缴费 — 点击查看</span><span class="kv">6<span class="ku">间</span></span></div>
+    <div class="kpi-hint">待催收</div>
+  </div>
+  <div class="kpi-card card-occ">
+    <div class="ki">👤</div>
+    <div class="kb"><span class="kl">出租率</span><span class="kv">33<span class="ku">/36间</span></span></div>
+  </div>
+</div>
+
+<!-- 收入分解 -->
+<div class="detail-row">
+  <div class="detail-card card-elec">
+    <div class="dch">
+      <svg viewBox="0 0 24 24"><path d="M13.5 2L4.2 13.5h5.3L10 22l9.3-11.5H14L13.5 2z" fill="currentColor"/></svg>
+      <span>电费</span>
+    </div>
+    <div class="dcb">
+      <div class="dm"><span class="dm-label">用量</span><span class="dm-value">1,280<span class="dm-unit">度</span></span></div>
+      <div class="dm-div"></div>
+      <div class="dm"><span class="dm-label">收入</span><span class="dm-value dm-money">1,280<span class="dm-unit">元</span></span></div>
+    </div>
+  </div>
+  <div class="detail-card card-water">
+    <div class="dch">
+      <svg viewBox="0 0 24 24"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z" fill="currentColor"/></svg>
+      <span>水费</span>
+    </div>
+    <div class="dcb">
+      <div class="dm"><span class="dm-label">用量</span><span class="dm-value">96<span class="dm-unit">吨</span></span></div>
+      <div class="dm-div"></div>
+      <div class="dm"><span class="dm-label">收入</span><span class="dm-value dm-money">480<span class="dm-unit">元</span></span></div>
+    </div>
+  </div>
+  <div class="detail-card card-rent">
+    <div class="dch">
+      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" fill="currentColor"/></svg>
+      <span>房租</span>
+    </div>
+    <div class="dcb">
+      <div class="dm"><span class="dm-label">房间数</span><span class="dm-value">30<span class="dm-unit">间</span></span></div>
+      <div class="dm-div"></div>
+      <div class="dm"><span class="dm-label">收入</span><span class="dm-value dm-money">30,800<span class="dm-unit">元</span></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 缴费明细 -->
+<div class="section-panel">
+  <div class="section-title">
+    <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" fill="currentColor"/></svg>
+    缴费明细
+  </div>
+  <div class="columns">
+    <div>
+      <div class="col-header col-green">✓ 已缴费 <span style="background:#f0f9eb;color:#67c23a;min-width:20px;height:18px;padding:0 6px;border-radius:9px;font-size:11px;display:inline-flex;align-items:center;font-weight:700">24</span></div>
+      <div class="col-items">
+        <div class="col-item"><span class="room">101</span><span class="money">1,280元</span></div>
+        <div class="col-item"><span class="room">102</span><span class="money">1,280元</span></div>
+        <div class="col-item"><span class="room">103</span><span class="money">1,285元</span></div>
+        <div class="col-item"><span class="room">104</span><span class="money">1,270元</span></div>
+        <div class="col-item"><span class="room">105</span><span class="money">1,300元</span></div>
+        <div class="col-item"><span class="room">…</span><span class="money">…</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="col-header col-red">✕ 待缴费 <span style="background:#fef0f0;color:#f56c6c;min-width:20px;height:18px;padding:0 6px;border-radius:9px;font-size:11px;display:inline-flex;align-items:center;font-weight:700">6</span></div>
+      <div class="col-items">
+        <div class="col-item"><span class="room">201</span><span class="money">1,250元</span></div>
+        <div class="col-item"><span class="room">205</span><span class="money">1,310元</span></div>
+        <div class="col-item"><span class="room">208</span><span class="money">1,280元</span></div>
+        <div class="col-item"><span class="room">302</span><span class="money">1,275元</span></div>
+        <div class="col-item"><span class="room">307</span><span class="money">1,290元</span></div>
+        <div class="col-item"><span class="room">311</span><span class="money">1,285元</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

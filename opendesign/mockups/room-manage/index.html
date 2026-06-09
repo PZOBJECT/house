@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>房间管理 — House 出租房管理系统</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#409eff;--primary-dark:#337ecc;
+  --success:#67c23a;--danger:#f56c6c;--warning:#e6a23c;
+  --text:#303133;--text2:#606266;--text3:#909399;
+  --bg:#f0f2f5;--card-bg:#fff;
+  --radius:14px;--shadow:0 1px 4px rgba(0,0,0,.04);
+  --font:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);padding:20px;min-height:100vh}
+
+/* 顶栏 */
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.top-bar h1{font-size:20px;font-weight:700;display:flex;align-items:center;gap:8px}
+.top-bar h1 svg{color:var(--primary);width:24px;height:24px}
+
+/* 统计条 */
+.stats-bar{display:flex;align-items:center;gap:24px;background:linear-gradient(135deg,#f8f9fc,#f0f4ff);border-radius:12px;padding:12px 20px;margin-bottom:14px}
+.stat-item{display:flex;align-items:center;gap:8px}
+.stat-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.stat-icon-t{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+.stat-icon-r{background:linear-gradient(135deg,#11998e,#38ef7d);color:#fff}
+.stat-icon-u{background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff}
+.stat-icon-p{background:linear-gradient(135deg,#4facfe,#00f2fe);color:#fff}
+.stat-info{display:flex;flex-direction:column}
+.stat-label{font-size:11px;color:var(--text3);font-weight:500}
+.stat-num{font-size:20px;font-weight:800;color:var(--text);line-height:1.2}
+.stat-unit{font-size:12px;font-weight:500;color:var(--text3);margin-left:2px}
+.stat-div{width:1px;height:30px;background:#e0e4ea;flex-shrink:0}
+
+/* 楼层标签 */
+.floor-row{display:flex;gap:10px;margin-bottom:14px}
+.floor-tag{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;background:#f5f7fa;border:2px solid transparent;cursor:pointer;font-size:14px;font-weight:600;color:var(--text2);transition:all .2s}
+.floor-tag:hover{background:#ecf5ff;border-color:#b3d8ff;transform:translateY(-1px)}
+.floor-tag.active{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 3px 10px rgba(64,158,255,.3)}
+.floor-count{font-size:11px;font-weight:500;opacity:.7}
+
+/* 卡片容器 */
+.card{background:var(--card-bg);border-radius:var(--radius);border:1px solid #ebeef5;box-shadow:var(--shadow);overflow:hidden}
+
+/* 表头 */
+.table-header{display:grid;grid-template-columns:48px 1.5fr 1.5fr 1.5fr 1.2fr 100px;padding:12px 16px;background:#f5f7fa;font-size:13px;font-weight:600;color:var(--text3);border-bottom:1px solid #ebeef5}
+
+/* 表格行 */
+.table-row{display:grid;grid-template-columns:48px 1.5fr 1.5fr 1.5fr 1.2fr 100px;padding:0 16px;align-items:center;border-bottom:1px solid #f5f7fa;height:52px;transition:background .15s}
+.table-row:hover{background:#f5f7fa}
+.table-row:last-child{border-bottom:none}
+.cell-room{font-size:18px;font-weight:700;color:var(--text)}
+.cell-price{font-size:17px;font-weight:600;color:var(--primary)}
+.cell-status{display:flex;align-items:center;gap:6px}
+.badge-rented{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:10px;font-size:12px;font-weight:600;background:#f0f9eb;color:var(--success);border:1px solid #c8e6b5}
+.badge-unrented{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:10px;font-size:12px;font-weight:600;background:#fef0f0;color:var(--danger);border:1px solid #fbc4c4}
+.btn-small{padding:5px 12px;border:1px solid var(--primary);border-radius:8px;font-size:12px;cursor:pointer;color:var(--primary);background:#fff;transition:all .2s}
+.btn-small:hover{background:var(--primary);color:#fff}
+
+/* 示例房间数据 */
+.room-num{display:flex;align-items:center;gap:6px}
+.floor-badge{display:inline-block;font-size:11px;padding:0 6px;height:18px;line-height:18px;border-radius:4px;font-weight:600}
+.floor-badge-1{background:#e8f5e9;color:#2e7d32}
+.floor-badge-2{background:#fff3e0;color:#e65100}
+.floor-badge-3{background:#e3f2fd;color:#1565c0}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <h1>
+    <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" fill="currentColor"/></svg>
+    房间管理
+  </h1>
+</div>
+
+<!-- 统计条 -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-icon stat-icon-t">∑</div>
+    <div class="stat-info"><span class="stat-label">总房间</span><span class="stat-num">36<span class="stat-unit">间</span></span></div>
+  </div>
+  <div class="stat-div"></div>
+  <div class="stat-item">
+    <div class="stat-icon stat-icon-r">✓</div>
+    <div class="stat-info"><span class="stat-label">已租</span><span class="stat-num">33<span class="stat-unit">间</span></span></div>
+  </div>
+  <div class="stat-div"></div>
+  <div class="stat-item">
+    <div class="stat-icon stat-icon-u">✕</div>
+    <div class="stat-info"><span class="stat-label">未租</span><span class="stat-num">3<span class="stat-unit">间</span></span></div>
+  </div>
+  <div class="stat-div"></div>
+  <div class="stat-item">
+    <div class="stat-icon stat-icon-p">%</div>
+    <div class="stat-info"><span class="stat-label">出租率</span><span class="stat-num">91.7<span class="stat-unit">%</span></span></div>
+  </div>
+</div>
+
+<!-- 楼层筛选 -->
+<div class="floor-row">
+  <div class="floor-tag active">全部 <span class="floor-count">36间</span></div>
+  <div class="floor-tag"><span class="floor-badge floor-badge-1">1F</span> 1楼 <span class="floor-count">12间</span></div>
+  <div class="floor-tag"><span class="floor-badge floor-badge-2">2F</span> 2楼 <span class="floor-count">12间</span></div>
+  <div class="floor-tag"><span class="floor-badge floor-badge-3">3F</span> 3楼 <span class="floor-count">12间</span></div>
+</div>
+
+<!-- 表格 -->
+<div class="card">
+  <div class="table-header">
+    <span></span><span>房间号</span><span>月租金</span><span>电费单价</span><span>水费单价</span><span>状态</span>
+  </div>
+
+  <div class="table-row">
+    <span></span>
+    <span class="room-num"><span class="floor-badge floor-badge-1">1F</span><span class="cell-room">101</span></span>
+    <span class="cell-price">¥1,200</span>
+    <span>¥1.00/度</span>
+    <span>¥5.00/吨</span>
+    <span class="cell-status"><span class="badge-rented">✓ 已租</span></span>
+  </div>
+  <div class="table-row">
+    <span></span>
+    <span class="room-num"><span class="floor-badge floor-badge-1">1F</span><span class="cell-room">102</span></span>
+    <span class="cell-price">¥1,200</span>
+    <span>¥1.00/度</span>
+    <span>¥5.00/吨</span>
+    <span class="cell-status"><span class="badge-rented">✓ 已租</span></span>
+  </div>
+  <div class="table-row">
+    <span></span>
+    <span class="room-num"><span class="floor-badge floor-badge-1">1F</span><span class="cell-room">103</span></span>
+    <span class="cell-price">¥1,200</span>
+    <span>¥1.00/度</span>
+    <span>¥5.00/吨</span>
+    <span class="cell-status"><span class="badge-rented">✓ 已租</span></span>
+  </div>
+  <div class="table-row">
+    <span></span>
+    <span class="room-num"><span class="floor-badge floor-badge-1">1F</span><span class="cell-room">104</span></span>
+    <span class="cell-price">¥1,200</span>
+    <span>¥1.00/度</span>
+    <span>¥5.00/吨</span>
+    <span class="cell-status"><span class="badge-unrented">✕ 未租</span></span>
+  </div>
+  <div class="table-row">
+    <span></span>
+    <span class="room-num"><span class="floor-badge floor-badge-2">2F</span><span class="cell-room">201</span></span>
+    <span class="cell-price">¥1,200</span>
+    <span>¥1.00/度</span>
+    <span>¥5.00/吨</span>
+    <span class="cell-status"><span class="badge-rented">✓ 已租</span></span>
+  </div>
+  <div class="table-row">
+    <span></span>
+    <span class="room-num"><span class="floor-badge floor-badge-2">2F</span><span class="cell-room">202</span></span>
+    <span class="cell-price">¥1,200</span>
+    <span>¥1.00/度</span>
+    <span>¥5.00/吨</span>
+    <span class="cell-status"><span class="badge-rented">✓ 已租</span></span>
+  </div>
+  <div class="table-row">
+    <span></span>
+    <span class="room-num"><span class="floor-badge floor-badge-2">2F</span><span class="cell-room">203</span></span>
+    <span class="cell-price">¥1,200</span>
+    <span>¥1.00/度</span>
+    <span>¥5.00/吨</span>
+    <span class="cell-status"><span class="badge-unrented">✕ 未租</span></span>
+  </div>
+  <div class="table-row">
+    <span></span>
+    <span class="room-num"><span class="floor-badge floor-badge-3">3F</span><span class="cell-room">301</span></span>
+    <span class="cell-price">¥1,200</span>
+    <span>¥1.00/度</span>
+    <span>¥5.00/吨</span>
+    <span class="cell-status"><span class="badge-rented">✓ 已租</span></span>
+  </div>
+  <div class="table-row">
+    <span></span>
+    <span class="room-num"><span class="floor-badge floor-badge-3">3F</span><span class="cell-room">302</span></span>
+    <span class="cell-price">¥1,200</span>
+    <span>¥1.00/度</span>
+    <span>¥5.00/吨</span>
+    <span class="cell-status"><span class="badge-rented">✓ 已租</span></span>
+  </div>
+  <div class="table-row">
+    <span></span>
+    <span class="room-num"><span class="floor-badge floor-badge-3">3F</span><span class="cell-room">303</span></span>
+    <span class="cell-price">¥1,200</span>
+    <span>¥1.00/度</span>
+    <span>¥5.00/吨</span>
+    <span class="cell-status"><span class="badge-rented">✓ 已租</span></span>
+  </div>
+</div>
+</body>
+</html>

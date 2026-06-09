@@ -1,15 +1,46 @@
 {
-  "generated": "2026-06-08T14:21:00Z",
+  "generated": "2026-06-08T14:30:00Z",
   "sections": [
     {
       "id": "mockups",
       "label": "Mockups",
-      "groups": []
+      "groups": [
+        {
+          "slug": "dashboard",
+          "label": "数据大屏（Dashboard）",
+          "files": [
+            { "label": "数据大屏 KPI + 缴费明细", "path": "mockups/dashboard/index.html" }
+          ]
+        },
+        {
+          "slug": "room-manage",
+          "label": "房间管理（RoomManage）",
+          "files": [
+            { "label": "房间列表 + 出租统计", "path": "mockups/room-manage/index.html" }
+          ]
+        },
+        {
+          "slug": "bill-manage",
+          "label": "月度账单（BillManage）",
+          "files": [
+            { "label": "账单录入 + 缴费管理", "path": "mockups/bill-manage/index.html" }
+          ]
+        }
+      ]
     },
     {
       "id": "design-systems",
       "label": "Design Systems",
-      "groups": []
+      "groups": [
+        {
+          "slug": "house",
+          "label": "House 项目设计系统",
+          "files": [
+            { "label": "颜色与字体 Token", "path": "design-systems/house/tokens/colors_and_type.css" },
+            { "label": "设计规范文档", "path": "design-systems/house/README.md" }
+          ]
+        }
+      ]
     }
   ]
 }
