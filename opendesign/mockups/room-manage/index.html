@@ -6,188 +6,112 @@
 <title>房间管理 — House 出租房管理系统</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --p:#409eff;--pd:#337ecc;
-  --s:#67c23a;--d:#f56c6c;--w:#e6a23c;
-  --t1:#303133;--t2:#606266;--t3:#909399;
-  --bg:#f0f2f5;
-  --r:14px;
-  --font:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
-}
-body{font-family:var(--font);background:var(--bg);color:var(--t1);padding:20px;min-height:100vh}
-.page{display:flex;flex-direction:column;height:calc(100vh - 40px)}
-/* ── 头部 ── */
-.hdr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:10px;flex-shrink:0}
-.hdr h2{font-size:20px;font-weight:700;color:var(--t1)}
-.radio-grp{display:flex;gap:0;border-radius:8px;overflow:hidden;border:1px solid #dcdfe6;background:#fff}
-.radio-grp .btn{padding:8px 20px;font-size:14px;font-weight:500;cursor:pointer;border-right:1px solid #dcdfe6;transition:all .2s;color:var(--t2);background:#fff}
-.radio-grp .btn:last-child{border-right:none}
-.radio-grp .btn:hover{color:var(--p)}
-.radio-grp .btn.active{background:var(--p);color:#fff;border-color:var(--p)}
-/* ── 统计条 ── */
-.stats{display:flex;align-items:center;gap:0;margin-bottom:10px;flex-shrink:0;background:linear-gradient(135deg,#f8f9fc,#f0f4ff);border-radius:12px;padding:12px 18px;border:1px solid #e4e9f2;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.si{display:flex;align-items:center;gap:10px;flex:1;min-width:0;padding:0 4px}
-.si svg{flex-shrink:0;width:20px;height:20px}
-.sb{display:flex;flex-direction:column;gap:1px;min-width:0}
-.sl{font-size:11px;font-weight:500;letter-spacing:.3px;line-height:1.2}
-.sv{font-size:20px;font-weight:800;line-height:1.2}
-.su{font-size:12px;font-weight:500;margin-left:2px;opacity:.7}
-.st-total .sv,.st-total .sl,.st-total svg{color:#606266}
-.st-rented .sv,.st-rented .sl,.st-rented svg{color:var(--s)}
-.st-unrented .sv,.st-unrented .sl,.st-unrented svg{color:var(--w)}
-.st-rate .sv,.st-rate .sl,.st-rate svg{color:var(--p)}
-.sdiv{width:1px;height:40px;background:#e0e4ea;margin:0 8px;flex-shrink:0}
-/* ── 楼层筛选 ── */
-.floor{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-shrink:0}
-.flabel{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;background:#edf2f7;border-radius:8px;font-size:14px;font-weight:600;color:#4a5568;white-space:nowrap}
-.flabel svg{flex-shrink:0;opacity:.8;width:16px;height:16px}
-.fbtns{display:flex;gap:10px}
-.fcard{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:88px;height:56px;border-radius:10px;cursor:pointer;transition:all .2s;user-select:none;background:#f5f7fa;border:2px solid transparent;color:var(--t2)}
-.fcard:hover{background:#ecf5ff;border-color:#b3d8ff;transform:translateY(-1px);box-shadow:0 2px 8px rgba(64,158,255,.12)}
-.fcard.active{background:var(--p);border-color:var(--p);color:#fff;box-shadow:0 3px 10px rgba(64,158,255,.3);transform:translateY(-1px)}
-.fn{font-size:17px;font-weight:700;line-height:1.2}
-.fd{font-size:11px;opacity:.75;line-height:1.2}
-.fcard.active .fd{opacity:.9}
-.fcheck{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--s);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(103,194,58,.4)}
-/* ── 表格 ── */
-.tw{flex:1;min-height:0;overflow:hidden}
-.tw .thdr{display:grid;grid-template-columns:120px 170px 190px 190px 140px 160px;padding:10px 14px;background:#f5f7fa;font-size:12px;font-weight:600;color:var(--t3);border-bottom:1px solid #ebeef5;text-align:center}
-.tw .thdr span{text-align:center}
-.tw .tbody{overflow-y:auto;height:calc(100% - 40px)}
-.tw .trow{display:grid;grid-template-columns:120px 170px 190px 190px 140px 160px;padding:0 14px;align-items:center;border-bottom:1px solid #f5f7fa;height:52px;text-align:center;transition:background .15s}
-.tw .trow:hover{background:#f5f7fa}
-.trow .room{font-size:18px;font-weight:700;color:var(--t1);letter-spacing:1px}
-.trow .price{font-size:17px;font-weight:600;color:var(--p)}
-.trow .switch{display:flex;align-items:center;justify-content:center;gap:5px;font-size:13px}
-.trow .switch .track{width:40px;height:20px;border-radius:10px;cursor:pointer;position:relative;transition:background .3s}
-.trow .switch .track.on{background:var(--s)}
-.trow .switch .track.off{background:#dcdfe6}
-.trow .switch .track .dot{position:absolute;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .3s}
-.trow .switch .track.on .dot{left:22px}
-.trow .switch .track.off .dot{left:2px}
-.trow .switch .slbl{font-weight:500}
-.trow .switch .slbl.on{color:var(--s)}
-.trow .switch .slbl.off{color:var(--t3)}
-.trow .ops{display:flex;gap:6px;justify-content:center}
-.trow .ops .btn{padding:5px 12px;border-radius:6px;border:1px solid var(--p);background:#fff;color:var(--p);font-size:12px;cursor:pointer;transition:all .2s}
-.trow .ops .btn:hover{background:var(--p);color:#fff}
-.trow .ops .btn-ok{background:var(--p);color:#fff}
-.trow .ops .btn-ok:hover{background:var(--pd)}
-.trow .inp{padding:4px 8px;border:1px solid #e0e4ea;border-radius:8px;width:90px;text-align:center;font-size:14px;outline:none}
-.trow .inp:focus{border-color:var(--p);box-shadow:0 0 0 2px rgba(64,158,255,.2)}
+:root{--el-color-white:#fff;--el-color-black:#000;--el-color-primary:#409eff;--el-color-success:#67c23a;--el-color-warning:#e6a23c;--el-color-danger:#f56c6c;--el-color-info:#909399;--el-bg-color:#fff;--el-bg-color-page:#f2f3f5;--el-text-color-primary:#303133;--el-text-color-regular:#606266;--el-text-color-secondary:#909399;--el-border-color:#dcdfe6;--el-border-color-lighter:#ebeef5;--el-border-radius-base:4px;--el-font-family:"Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif}
+body{font-family:var(--el-font-family);background:var(--el-bg-color-page);color:var(--el-text-color-primary);padding:20px;min-height:100vh}
+/* Exact real CSS from rendered RoomManage component */
+.room-manage{display:flex;flex-direction:column;height:calc(100vh - 24px);padding:0 2px}
+.page-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:10px;flex-shrink:0}
+.page-header h2{margin:0;font-size:20px;color:#303133}
+.header-actions{display:flex;gap:12px;align-items:center}
+.stats-bar{display:flex;align-items:center;gap:0;margin-bottom:10px;flex-shrink:0;background:linear-gradient(135deg,#f8f9fc 0%,#f0f4ff 100%);border-radius:12px;padding:12px 18px;border:1px solid #e4e9f2;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.stat-item{display:flex;align-items:center;gap:10px;flex:1;min-width:0;padding:0 4px}
+.stat-icon{flex-shrink:0;width:20px;height:20px}
+.stat-body{display:flex;flex-direction:column;gap:1px;min-width:0}
+.stat-label{font-size:11px;font-weight:500;letter-spacing:.3px;line-height:1.2}
+.stat-value{font-size:20px;font-weight:800;line-height:1.2}
+.stat-unit{font-size:12px;font-weight:500;margin-left:2px;opacity:.7}
+.stat-total .stat-icon{color:#606266}
+.stat-total .stat-label{color:#909399}
+.stat-total .stat-value{color:#303133}
+.stat-rented .stat-icon,.stat-rented .stat-label,.stat-rented .stat-value{color:#67c23a}
+.stat-unrented .stat-icon,.stat-unrented .stat-label,.stat-unrented .stat-value{color:#e6a23c}
+.stat-rate .stat-icon,.stat-rate .stat-label,.stat-rate .stat-value{color:#409eff}
+.stat-divider{width:1px;height:40px;background:#e0e4ea;margin:0 8px;flex-shrink:0}
+.floor-filter{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-shrink:0}
+.floor-label{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;background:#edf2f7;border-radius:8px;font-size:14px;font-weight:600;color:#4a5568;white-space:nowrap;letter-spacing:.5px}
+.floor-icon{flex-shrink:0;opacity:.8}
+.floor-buttons{display:flex;gap:10px}
+.floor-card{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:88px;height:56px;border-radius:10px;cursor:pointer;transition:.2s;user-select:none;background:#f5f7fa;border:2px solid transparent;color:#606266}
+.floor-card:hover{background:#ecf5ff;border-color:#b3d8ff;transform:translateY(-1px);box-shadow:0 2px 8px rgba(64,158,255,.12)}
+.floor-card.active{background:#409eff;border-color:#409eff;color:#fff;box-shadow:0 3px 10px rgba(64,158,255,.3);transform:translateY(-1px)}
+.floor-num{font-size:17px;font-weight:700;line-height:1.2}
+.floor-desc{font-size:11px;opacity:.75;line-height:1.2}
+.floor-card.active .floor-desc{opacity:.9}
+.floor-check{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#67c23a;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(103,194,58,.4)}
+.table-wrapper{flex:1;min-height:0;overflow:hidden}
+.table-wrapper .el-table__row{height:52px}
+.table-wrapper .el-table__row td{padding:6px 0}
+.cell-room{font-size:18px;font-weight:700;color:#303133;letter-spacing:1px}
+.cell-value{font-size:17px;font-weight:600;color:#409eff}
 </style>
 </head>
 <body>
-<div class="page">
-  <!-- 头部 -->
-  <div class="hdr">
+<div class="room-manage">
+  <div class="page-header">
     <h2>房间管理</h2>
-    <div class="radio-grp">
-      <div class="btn">全部</div>
-      <div class="btn active">已租</div>
-      <div class="btn">未租</div>
+    <div class="header-actions">
+      <div style="display:flex;gap:0;border:1px solid #dcdfe6;border-radius:4px;overflow:hidden">
+        <span style="padding:8px 20px;font-size:14px;background:#409eff;color:#fff;cursor:pointer">全部</span>
+        <span style="padding:8px 20px;font-size:14px;color:#606266;cursor:pointer">已租</span>
+        <span style="padding:8px 20px;font-size:14px;color:#606266;cursor:pointer">未租</span>
+      </div>
     </div>
   </div>
 
-  <!-- 统计条 -->
-  <div class="stats">
-    <div class="si st-total">
-      <svg viewBox="0 0 24 24"><path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3l-3-2.7z" fill="currentColor"/></svg>
-      <div class="sb"><span class="sl">总房间</span><span class="sv">36<span class="su">间</span></span></div>
+  <div class="stats-bar">
+    <div class="stat-item stat-total">
+      <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+      <div class="stat-body"><span class="stat-label">总房间</span><span class="stat-value">36<span class="stat-unit">间</span></span></div>
     </div>
-    <div class="sdiv"></div>
-    <div class="si st-rented">
-      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor"/></svg>
-      <div class="sb"><span class="sl">已租</span><span class="sv">33<span class="su">间</span></span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item stat-rented">
+      <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      <div class="stat-body"><span class="stat-label">已租</span><span class="stat-value">0<span class="stat-unit">间</span></span></div>
     </div>
-    <div class="sdiv"></div>
-    <div class="si st-unrented">
-      <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" fill="currentColor"/></svg>
-      <div class="sb"><span class="sl">未租</span><span class="sv">3<span class="su">间</span></span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item stat-unrented">
+      <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      <div class="stat-body"><span class="stat-label">未租</span><span class="stat-value">0<span class="stat-unit">间</span></span></div>
     </div>
-    <div class="sdiv"></div>
-    <div class="si st-rate">
-      <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" fill="currentColor"/></svg>
-      <div class="sb"><span class="sl">出租率</span><span class="sv">91.7<span class="su">%</span></span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item stat-rate">
+      <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      <div class="stat-body"><span class="stat-label">出租率</span><span class="stat-value">0<span class="stat-unit">%</span></span></div>
     </div>
   </div>
 
-  <!-- 楼层筛选 -->
-  <div class="floor">
-    <span class="flabel">
-      <svg viewBox="0 0 24 24"><path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3l-3-2.7z" fill="currentColor"/></svg>
+  <div class="floor-filter">
+    <span class="floor-label">
+      <svg class="floor-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
       楼层
     </span>
-    <div class="fbtns">
-      <div class="fcard"><span class="fn">全部</span><span class="fd">2-5楼</span></div>
-      <div class="fcard active"><span class="fn">2楼</span><span class="fd">201-209</span><span class="fcheck">✓</span></div>
-      <div class="fcard"><span class="fn">3楼</span><span class="fd">301-309</span></div>
-      <div class="fcard"><span class="fn">4楼</span><span class="fd">401-409</span></div>
-      <div class="fcard"><span class="fn">5楼</span><span class="fd">501-509</span></div>
+    <div class="floor-buttons">
+      <div class="floor-card"><span class="floor-num">全部</span><span class="floor-desc">2-5楼</span></div>
+      <div class="floor-card active"><span class="floor-num">2楼</span><span class="floor-desc">201-209</span><span class="floor-check">✓</span></div>
+      <div class="floor-card"><span class="floor-num">3楼</span><span class="floor-desc">301-309</span></div>
+      <div class="floor-card"><span class="floor-num">4楼</span><span class="floor-desc">401-409</span></div>
+      <div class="floor-card"><span class="floor-num">5楼</span><span class="floor-desc">501-509</span></div>
     </div>
   </div>
 
-  <!-- 表格 -->
-  <div class="tw">
-    <div class="thdr">
-      <span>房间号</span><span>月租金（元）</span><span>电费单价（元/度）</span><span>水费单价（元/吨）</span><span>出租状态</span><span>操作</span>
-    </div>
-    <div class="tbody">
-      <div class="trow">
-        <span class="room">201</span>
-        <span class="price">1,200</span><span class="price">1.00</span><span class="price">5.00</span>
-        <div class="switch"><div class="track on"><div class="dot"></div></div><span class="slbl on">已租</span></div>
-        <div class="ops"><div class="btn">编辑</div></div>
-      </div>
-      <div class="trow">
-        <span class="room">202</span>
-        <span class="price">1,200</span><span class="price">1.00</span><span class="price">5.00</span>
-        <div class="switch"><div class="track on"><div class="dot"></div></div><span class="slbl on">已租</span></div>
-        <div class="ops"><div class="btn">编辑</div></div>
-      </div>
-      <div class="trow" style="background:#f5f7fa">
-        <span class="room">203</span>
-        <input class="inp" value="1200"><input class="inp" value="1.00"><input class="inp" value="5.00">
-        <div class="switch"><div class="track off"><div class="dot"></div></div><span class="slbl off">未租</span></div>
-        <div class="ops"><div class="btn btn-ok">保存</div><div class="btn">取消</div></div>
-      </div>
-      <div class="trow">
-        <span class="room">204</span>
-        <span class="price">1,200</span><span class="price">1.00</span><span class="price">5.00</span>
-        <div class="switch"><div class="track on"><div class="dot"></div></div><span class="slbl on">已租</span></div>
-        <div class="ops"><div class="btn">编辑</div></div>
-      </div>
-      <div class="trow">
-        <span class="room">205</span>
-        <span class="price">1,250</span><span class="price">1.00</span><span class="price">5.00</span>
-        <div class="switch"><div class="track on"><div class="dot"></div></div><span class="slbl on">已租</span></div>
-        <div class="ops"><div class="btn">编辑</div></div>
-      </div>
-      <div class="trow">
-        <span class="room">206</span>
-        <span class="price">1,200</span><span class="price">1.00</span><span class="price">5.00</span>
-        <div class="switch"><div class="track on"><div class="dot"></div></div><span class="slbl on">已租</span></div>
-        <div class="ops"><div class="btn">编辑</div></div>
-      </div>
-      <div class="trow">
-        <span class="room">207</span>
-        <span class="price">1,200</span><span class="price">1.00</span><span class="price">5.00</span>
-        <div class="switch"><div class="track off"><div class="dot"></div></div><span class="slbl off">未租</span></div>
-        <div class="ops"><div class="btn">编辑</div></div>
-      </div>
-      <div class="trow">
-        <span class="room">208</span>
-        <span class="price">1,200</span><span class="price">1.00</span><span class="price">5.00</span>
-        <div class="switch"><div class="track on"><div class="dot"></div></div><span class="slbl on">已租</span></div>
-        <div class="ops"><div class="btn">编辑</div></div>
-      </div>
-      <div class="trow">
-        <span class="room">209</span>
-        <span class="price">1,300</span><span class="price">1.00</span><span class="price">5.00</span>
-        <div class="switch"><div class="track on"><div class="dot"></div></div><span class="slbl on">已租</span></div>
-        <div class="ops"><div class="btn">编辑</div></div>
-      </div>
-    </div>
+  <div class="table-wrapper">
+    <table style="width:100%;border-collapse:collapse;border:1px solid var(--el-border-color);border-radius:8px;overflow:hidden">
+      <thead>
+        <tr style="background:#f5f7fa;color:#909399;font-size:13px;font-weight:500">
+          <th style="padding:12px 8px;text-align:left;border-bottom:1px solid #ebeef5">房间号</th>
+          <th style="padding:12px 8px;text-align:left;border-bottom:1px solid #ebeef5">月租金（元）</th>
+          <th style="padding:12px 8px;text-align:left;border-bottom:1px solid #ebeef5">电费单价（元/度）</th>
+          <th style="padding:12px 8px;text-align:left;border-bottom:1px solid #ebeef5">水费单价（元/吨）</th>
+          <th style="padding:12px 8px;text-align:left;border-bottom:1px solid #ebeef5">出租状态</th>
+          <th style="padding:12px 8px;text-align:left;border-bottom:1px solid #ebeef5">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="height:52px"><td class="cell-room" style="padding:6px 0">201</td><td class="cell-value" style="padding:6px 0">1200.00</td><td class="cell-value" style="padding:6px 0">1.00</td><td class="cell-value" style="padding:6px 0">5.00</td><td style="padding:6px 0"><span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:10px;background:#f0f9eb;color:#67c23a;font-size:12px;font-weight:600">已租</span></td><td style="padding:6px 0"><span style="font-size:13px;color:#409eff;cursor:pointer">编辑</span></td></tr>
+        <tr style="height:52px;background:#fafafa"><td class="cell-room" style="padding:6px 0">202</td><td class="cell-value" style="padding:6px 0">1300.00</td><td class="cell-value" style="padding:6px 0">1.00</td><td class="cell-value" style="padding:6px 0">5.00</td><td style="padding:6px 0"><span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:10px;background:#f0f9eb;color:#67c23a;font-size:12px;font-weight:600">已租</span></td><td style="padding:6px 0"><span style="font-size:13px;color:#409eff;cursor:pointer">编辑</span></td></tr>
+        <tr style="height:52px"><td class="cell-room" style="padding:6px 0">203</td><td class="cell-value" style="padding:6px 0">1100.00</td><td class="cell-value" style="padding:6px 0">1.00</td><td class="cell-value" style="padding:6px 0">5.00</td><td style="padding:6px 0"><span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:10px;background:#fef0f0;color:#f56c6c;font-size:12px;font-weight:600">未租</span></td><td style="padding:6px 0"><span style="font-size:13px;color:#409eff;cursor:pointer">编辑</span></td></tr>
+      </tbody>
+    </table>
   </div>
 </div>
 </body>

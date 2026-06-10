@@ -6,194 +6,133 @@
 <title>月度账单 — House 出租房管理系统</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --p:#409eff;--pd:#337ecc;
-  --s:#67c23a;--d:#f56c6c;--w:#e6a23c;
-  --t1:#303133;--t2:#606266;--t3:#909399;
-  --bg:#f0f2f5;
-  --font:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
-}
-body{font-family:var(--font);background:var(--bg);color:var(--t1);padding:20px;min-height:100vh}
-.page{display:flex;flex-direction:column;height:calc(100vh - 40px)}
-/* ── 头部 ── */
-.hdr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:8px;flex-shrink:0}
-.hl{display:flex;align-items:center;gap:10px}
-.hl h2{font-size:20px;font-weight:700;color:var(--t1);margin:0}
-.bdg{display:inline-flex;align-items:center;gap:3px;padding:3px 12px 3px 10px;border-radius:20px;font-size:13px;font-weight:600;white-space:nowrap;line-height:1.5}
-.bdg-p{background:linear-gradient(135deg,#f0f9eb,#e8f5e0);color:var(--s);border:1px solid #c8e6b5;box-shadow:0 1px 3px rgba(103,194,58,.15)}
-.bdg-u{background:linear-gradient(135deg,#fef0f0,#fde8e8);color:var(--d);border:1px solid #fbc4c4;box-shadow:0 1px 3px rgba(245,108,108,.15)}
-.bdg svg{flex-shrink:0;opacity:.9;width:14px;height:14px}
-.bdg-num{font-size:16px;font-weight:800;min-width:16px;text-align:center;margin-right:1px}
-.bdg-txt{font-size:12px;font-weight:500;opacity:.85}
-/* 筛选栏 */
-.fbar{display:flex;align-items:center;gap:8px;padding:5px 10px;background:#f5f7fa;border-radius:10px;border:1px solid #e8ecf1}
-.fbar select{padding:6px 10px;border-radius:8px;border:1px solid #e0e4ea;font-size:14px;font-weight:500;color:var(--t1);background:#fff;outline:none;cursor:pointer}
-.fbar select:hover{border-color:var(--p)}
-.fbar .btn{padding:8px 16px;border-radius:8px;border:none;background:var(--p);color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
-.fbar .btn:hover{background:var(--pd)}
-/* ── 统计栏 ── */
-.stats{display:flex;align-items:center;gap:0;margin-bottom:10px;flex-shrink:0;background:#f5f7fa;border-radius:10px;padding:8px 12px;border:1px solid #e8ecf1}
-.si{display:flex;flex-direction:column;align-items:center;gap:1px;flex:1;min-width:0}
-.sl{font-size:11px;font-weight:500;color:var(--t3);letter-spacing:.2px;white-space:nowrap}
-.sv{font-size:16px;font-weight:800;color:var(--t1);line-height:1.3}
-.su{font-size:12px;font-weight:500;margin-left:1px;opacity:.7}
-.sv-purple{color:#7c3aed}
-.sv-blue{color:var(--p)}
-.sv-aqua{color:#0ea5e9}
-.sv-orange{color:var(--w)}
-.sv-red{color:var(--d)}
-.sdiv{width:1px;height:20px;background:#e0e4ea;flex-shrink:0;margin:0 2px}
-/* ── 楼层筛选 ── */
-.floor{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-shrink:0}
-.flabel{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;background:#edf2f7;border-radius:8px;font-size:14px;font-weight:600;color:#4a5568;white-space:nowrap}
-.flabel svg{flex-shrink:0;opacity:.8;width:16px;height:16px}
-.fbtns{display:flex;gap:10px}
-.fcard{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:88px;height:56px;border-radius:10px;cursor:pointer;transition:all .2s;user-select:none;background:#f5f7fa;border:2px solid transparent;color:var(--t2)}
-.fcard:hover{background:#ecf5ff;border-color:#b3d8ff;transform:translateY(-1px);box-shadow:0 2px 8px rgba(64,158,255,.12)}
-.fcard.active{background:var(--p);border-color:var(--p);color:#fff;box-shadow:0 3px 10px rgba(64,158,255,.3);transform:translateY(-1px)}
-.fn{font-size:17px;font-weight:700;line-height:1.2}
-.fd{font-size:11px;opacity:.75;line-height:1.2}
-.fcard.active .fd{opacity:.9}
-.fcheck{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--s);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(103,194,58,.4)}
-/* ── 表格 ── */
-.tw{flex:1;min-height:0;overflow:hidden}
-.thdr{display:grid;grid-template-columns:90px 90px 90px 80px 90px 90px 90px 80px 90px 110px 120px 100px 220px;padding:10px 8px;background:#f5f7fa;font-size:12px;font-weight:600;color:var(--t3);border-bottom:1px solid #ebeef5;text-align:center}
-.thdr span{text-align:center}
-.tbody{overflow-y:auto;height:calc(100% - 40px)}
-.trow{display:grid;grid-template-columns:90px 90px 90px 80px 90px 90px 90px 80px 90px 110px 120px 100px 220px;padding:0 8px;align-items:center;border-bottom:1px solid #f5f7fa;height:48px;text-align:center;font-size:13px;transition:background .15s}
-.trow:hover{background:#f5f7fa}
-.trow.paid{background:#f4f4f5;color:var(--t3)}
-.trow .room{font-weight:600;color:var(--t1)}
-.trow.paid .room{color:var(--t3)}
-.trow .clink{color:var(--p);cursor:pointer;text-decoration:none;font-weight:500}
-.trow .clink:hover{text-decoration:underline}
-.trow .cost{font-weight:700;color:var(--w)}
-.trow .tag{padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600}
-.trow .tag-s{background:#f0f9eb;color:var(--s)}
-.trow .tag-d{background:#fef0f0;color:var(--d)}
-.trow .ops{display:flex;gap:4px;justify-content:center;flex-wrap:wrap}
-.trow .ops .btn{padding:4px 8px;border-radius:6px;border:1px solid;font-size:11px;cursor:pointer;transition:all .2s;font-weight:500}
-.trow .ops .btn-sm{background:var(--p);color:#fff;border-color:var(--p)}
-.trow .ops .btn-sm:hover{background:var(--pd)}
-.trow .ops .btn-warn{background:var(--w);color:#fff;border-color:var(--w)}
-.trow .ops .btn-warn:hover{background:#d4894a}
+:root{--el-color-primary:#409eff;--el-color-success:#67c23a;--el-color-warning:#e6a23c;--el-color-danger:#f56c6c;--el-color-info:#909399;--el-bg-color:#fff;--el-bg-color-page:#f2f3f5;--el-text-color-primary:#303133;--el-text-color-regular:#606266;--el-text-color-secondary:#909399;--el-border-color:#dcdfe6;--el-font-family:"Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif}
+body{font-family:var(--el-font-family);background:var(--el-bg-color-page);color:var(--el-text-color-primary);padding:20px;min-height:100vh}
+/* Exact real CSS from rendered BillManage component */
+.bill-manage{display:flex;flex-direction:column;height:calc(100vh - 24px);padding:0 2px}
+.page-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:8px;flex-shrink:0}
+.header-left{display:flex;align-items:center;gap:10px}
+.page-header h2{margin:0;font-size:20px;color:#303133}
+.paid-badge,.unpaid-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 12px 3px 10px;border-radius:20px;font-size:13px;font-weight:600;white-space:nowrap;line-height:1.5}
+.paid-badge{background:linear-gradient(135deg,#f0f9eb,#e8f5e0);color:#67c23a;border:1px solid #c8e6b5;box-shadow:0 1px 3px rgba(103,194,58,.15)}
+.unpaid-badge{background:linear-gradient(135deg,#fef0f0,#fde8e8);color:#f56c6c;border:1px solid #fbc4c4;box-shadow:0 1px 3px rgba(245,108,108,.15)}
+.badge-icon{flex-shrink:0;opacity:.9}
+.badge-num{font-size:16px;font-weight:800;min-width:16px;text-align:center;margin-right:1px}
+.badge-text{font-size:12px;font-weight:500;opacity:.85}
+.filter-bar{display:flex;align-items:center;gap:8px;padding:5px 10px;background:#f5f7fa;border-radius:10px;border:1px solid #e8ecf1}
+.filter-month .el-input__wrapper{background:#fff;border-radius:8px;border:1px solid #e0e4ea}
+.filter-month .el-input__wrapper:hover{border-color:#409eff}
+.filter-btn{font-weight:600;padding:8px 16px;border-radius:8px}
+.stats-bar{display:flex;align-items:center;gap:0;margin-bottom:10px;flex-shrink:0;background:#f5f7fa;border-radius:10px;padding:8px 12px;border:1px solid #e8ecf1}
+.stat-item{display:flex;flex-direction:column;align-items:center;gap:1px;flex:1;min-width:0}
+.stat-label{font-size:11px;font-weight:500;color:#909399;letter-spacing:.2px;white-space:nowrap}
+.stat-value{font-size:16px;font-weight:700;color:#303133;line-height:1.3}
+.stat-unit{font-size:11px;font-weight:500;margin-left:2px;opacity:.7}
+.stat-blue{color:#409eff}
+.stat-purple{color:#7c3aed}
+.stat-aqua{color:#0ea5e9}
+.stat-orange{color:#e6a23c}
+.stat-red{color:#f56c6c}
+.stat-divider{width:1px;height:30px;background:#e0e4ea;margin:0 3px;flex-shrink:0}
+.floor-filter{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-shrink:0}
+.floor-label{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;background:#edf2f7;border-radius:8px;font-size:14px;font-weight:600;color:#4a5568;white-space:nowrap;letter-spacing:.5px}
+.floor-buttons{display:flex;gap:10px}
+.floor-card{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:88px;height:56px;border-radius:10px;cursor:pointer;transition:.2s;user-select:none;background:#f5f7fa;border:2px solid transparent;color:#606266}
+.floor-card:hover{background:#ecf5ff;border-color:#b3d8ff;transform:translateY(-1px);box-shadow:0 2px 8px rgba(64,158,255,.12)}
+.floor-card.active{background:#409eff;border-color:#409eff;color:#fff;box-shadow:0 3px 10px rgba(64,158,255,.3);transform:translateY(-1px)}
+.floor-num{font-size:17px;font-weight:700;line-height:1.2}
+.floor-desc{font-size:11px;opacity:.75;line-height:1.2}
+.floor-card.active .floor-desc{opacity:.9}
+.floor-check{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#67c23a;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(103,194,58,.4)}
+.table-wrapper{flex:1;min-height:0;overflow:hidden}
+.table-wrapper .el-table__row{height:48px}
+.table-wrapper .el-table__row td{padding:6px 0}
+.paid-row{background-color:#f4f4f5!important;color:#909399}
 </style>
 </head>
 <body>
-<div class="page">
-  <!-- 头部 -->
-  <div class="hdr">
-    <div class="hl">
+<div class="bill-manage">
+  <div class="page-header">
+    <div class="header-left">
       <h2>月度账单</h2>
-      <span class="bdg bdg-p"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor"/></svg><span class="bdg-num">8</span><span class="bdg-txt">已缴费</span></span>
-      <span class="bdg bdg-u"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" fill="currentColor"/></svg><span class="bdg-num">4</span><span class="bdg-txt">未缴费</span></span>
+      <span class="paid-badge">
+        <svg class="badge-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        <span class="badge-num">0</span><span class="badge-text">已缴费</span>
+      </span>
+      <span class="unpaid-badge">
+        <svg class="badge-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        <span class="badge-num">0</span><span class="badge-text">未缴费</span>
+      </span>
     </div>
-    <div class="fbar">
-      <select><option>2026年06月</option></select>
-      <div class="btn">+ 生成当月账单</div>
+    <div class="filter-bar">
+      <span style="display:inline-flex;align-items:center;gap:4px;font-size:14px;color:#606266;font-weight:600">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>
+        2026年06月
+      </span>
+      <span style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:#409eff;color:#fff;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        生成当月账单
+      </span>
     </div>
   </div>
 
-  <!-- 统计栏（7项） -->
-  <div class="stats">
-    <div class="si"><span class="sl">房间</span><span class="sv">12<span class="su">间</span></span></div>
-    <div class="sdiv"></div>
-    <div class="si"><span class="sl">⚡用电量</span><span class="sv sv-purple">480.5<span class="su">度</span></span></div>
-    <div class="sdiv"></div>
-    <div class="si"><span class="sl">电费合计</span><span class="sv sv-blue">480.50<span class="su">元</span></span></div>
-    <div class="sdiv"></div>
-    <div class="si"><span class="sl">💧用水量</span><span class="sv sv-aqua">38.0<span class="su">吨</span></span></div>
-    <div class="sdiv"></div>
-    <div class="si"><span class="sl">水费合计</span><span class="sv sv-blue">190.00<span class="su">元</span></span></div>
-    <div class="sdiv"></div>
-    <div class="si"><span class="sl">房租合计</span><span class="sv sv-orange">12,000.00<span class="su">元</span></span></div>
-    <div class="sdiv"></div>
-    <div class="si"><span class="sl">总合计</span><span class="sv sv-red">12,670.50<span class="su">元</span></span></div>
+  <div class="stats-bar">
+    <div class="stat-item"><span class="stat-label">房间</span><span class="stat-value">0<span class="stat-unit">间</span></span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item"><span class="stat-label">⚡ 用电量</span><span class="stat-value stat-aqua">0.00<span class="stat-unit">度</span></span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item"><span class="stat-label">电费合计</span><span class="stat-value stat-blue">0.00<span class="stat-unit">元</span></span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item"><span class="stat-label">💧 用水量</span><span class="stat-value stat-purple">0.00<span class="stat-unit">吨</span></span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item"><span class="stat-label">水费合计</span><span class="stat-value stat-orange">0.00<span class="stat-unit">元</span></span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item"><span class="stat-label">房租合计</span><span class="stat-value stat-red">0.00<span class="stat-unit">元</span></span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item"><span class="stat-label">总合计</span><span class="stat-value" style="color:#303133">0.00<span class="stat-unit">元</span></span></div>
   </div>
 
-  <!-- 楼层筛选 -->
-  <div class="floor">
-    <span class="flabel">
-      <svg viewBox="0 0 24 24"><path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3l-3-2.7z" fill="currentColor"/></svg>
+  <div class="floor-filter">
+    <span class="floor-label">
+      <svg class="floor-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
       楼层
     </span>
-    <div class="fbtns">
-      <div class="fcard"><span class="fn">全部</span><span class="fd">2-5楼</span></div>
-      <div class="fcard active"><span class="fn">2楼</span><span class="fd">201-209</span><span class="fcheck">✓</span></div>
-      <div class="fcard"><span class="fn">3楼</span><span class="fd">301-309</span></div>
-      <div class="fcard"><span class="fn">4楼</span><span class="fd">401-409</span></div>
-      <div class="fcard"><span class="fn">5楼</span><span class="fd">501-509</span></div>
+    <div class="floor-buttons">
+      <div class="floor-card"><span class="floor-num">全部</span><span class="floor-desc">2-5楼</span></div>
+      <div class="floor-card active"><span class="floor-num">2楼</span><span class="floor-desc">201-209</span><span class="floor-check">✓</span></div>
+      <div class="floor-card"><span class="floor-num">3楼</span><span class="floor-desc">301-309</span></div>
+      <div class="floor-card"><span class="floor-num">4楼</span><span class="floor-desc">401-409</span></div>
+      <div class="floor-card"><span class="floor-num">5楼</span><span class="floor-desc">501-509</span></div>
     </div>
   </div>
 
-  <!-- 表格 -->
-  <div class="tw">
-    <div class="thdr">
-      <span>房间号</span>
-      <span>电·上月</span><span>电·本月</span><span>用量</span><span>电费</span>
-      <span>水·上月</span><span>水·本月</span><span>用量</span><span>水费</span>
-      <span>房租（元）</span><span>总费用（元）</span><span>收费状态</span><span>操作</span>
-    </div>
-    <div class="tbody">
-      <!-- 未缴费 — 可编辑 -->
-      <div class="trow">
-        <span class="room">201</span>
-        <span>1,280</span><span class="clink">1,420</span><span>140</span><span class="cost">140.00</span>
-        <span>86</span><span class="clink">92</span><span>6</span><span class="cost">30.00</span>
-        <span>1,200</span><span class="cost">1,370.00</span>
-        <span><span class="tag tag-d">未收费</span></span>
-        <div class="ops"><div class="btn btn-sm">标记收费</div><div class="btn btn-sm">收据</div></div>
-      </div>
-      <div class="trow">
-        <span class="room">202</span>
-        <span>950</span><span class="clink">1,080</span><span>130</span><span class="cost">130.00</span>
-        <span>42</span><span class="clink">48</span><span>6</span><span class="cost">30.00</span>
-        <span>1,200</span><span class="cost">1,360.00</span>
-        <span><span class="tag tag-d">未收费</span></span>
-        <div class="ops"><div class="btn btn-sm">标记收费</div><div class="btn btn-sm">收据</div></div>
-      </div>
-      <div class="trow">
-        <span class="room">203</span>
-        <span>2,150</span><span class="clink">2,300</span><span>150</span><span class="cost">150.00</span>
-        <span>65</span><span class="clink">70</span><span>5</span><span class="cost">25.00</span>
-        <span>1,200</span><span class="cost">1,375.00</span>
-        <span><span class="tag tag-d">未收费</span></span>
-        <div class="ops"><div class="btn btn-sm">标记收费</div><div class="btn btn-sm">收据</div></div>
-      </div>
-      <div class="trow">
-        <span class="room">204</span>
-        <span>1,680</span><span class="clink">1,790</span><span>110</span><span class="cost">110.00</span>
-        <span>34</span><span class="clink">40</span><span>6</span><span class="cost">30.00</span>
-        <span>1,200</span><span class="cost">1,340.00</span>
-        <span><span class="tag tag-d">未收费</span></span>
-        <div class="ops"><div class="btn btn-sm">标记收费</div><div class="btn btn-sm">收据</div></div>
-      </div>
-      <!-- 已缴费 — 置灰 -->
-      <div class="trow paid">
-        <span class="room">205</span>
-        <span>2,010</span><span>2,140</span><span>130</span><span>130.00</span>
-        <span>55</span><span>61</span><span>6</span><span>30.00</span>
-        <span>1,200</span><span style="color:var(--s);font-weight:700">1,360.00</span>
-        <span><span class="tag tag-s">已收费</span></span>
-        <div class="ops"><div class="btn btn-warn">取消收费</div><div class="btn btn-sm">收据</div></div>
-      </div>
-      <div class="trow paid">
-        <span class="room">206</span>
-        <span>3,250</span><span>3,390</span><span>140</span><span>140.00</span>
-        <span>78</span><span>84</span><span>6</span><span>30.00</span>
-        <span>1,200</span><span style="color:var(--s);font-weight:700">1,370.00</span>
-        <span><span class="tag tag-s">已收费</span></span>
-        <div class="ops"><div class="btn btn-warn">取消收费</div><div class="btn btn-sm">收据</div></div>
-      </div>
-      <div class="trow paid">
-        <span class="room">207</span>
-        <span>1,560</span><span>1,690</span><span>130</span><span>130.00</span>
-        <span>29</span><span>35</span><span>6</span><span>30.00</span>
-        <span>1,200</span><span style="color:var(--s);font-weight:700">1,360.00</span>
-        <span><span class="tag tag-s">已收费</span></span>
-        <div class="ops"><div class="btn btn-warn">取消收费</div><div class="btn btn-sm">收据</div></div>
-      </div>
-    </div>
+  <div class="table-wrapper">
+    <table style="width:100%;border-collapse:collapse;border:1px solid var(--el-border-color,#dcdfe6);border-radius:8px;overflow:hidden;font-size:14px">
+      <thead>
+        <tr style="background:#f5f7fa;color:#909399;font-size:13px">
+          <th rowspan="2" style="padding:10px 8px;border-bottom:1px solid #ebeef5;text-align:center">房间号</th>
+          <th colspan="4" style="padding:10px 8px;border-bottom:1px solid #ebeef5;text-align:center">电表读数</th>
+          <th colspan="4" style="padding:10px 8px;border-bottom:1px solid #ebeef5;text-align:center">水表读数</th>
+          <th rowspan="2" style="padding:10px 8px;border-bottom:1px solid #ebeef5;text-align:center">房租（元）</th>
+          <th rowspan="2" style="padding:10px 8px;border-bottom:1px solid #ebeef5;text-align:center">总费用（元）</th>
+          <th rowspan="2" style="padding:10px 8px;border-bottom:1px solid #ebeef5;text-align:center">收费状态</th>
+          <th rowspan="2" style="padding:10px 8px;border-bottom:1px solid #ebeef5;text-align:center">操作</th>
+        </tr>
+        <tr style="background:#f5f7fa;color:#909399;font-size:12px">
+          <th style="padding:6px 4px;border-bottom:1px solid #ebeef5;text-align:center">上月</th>
+          <th style="padding:6px 4px;border-bottom:1px solid #ebeef5;text-align:center">本月</th>
+          <th style="padding:6px 4px;border-bottom:1px solid #ebeef5;text-align:center">用量</th>
+          <th style="padding:6px 4px;border-bottom:1px solid #ebeef5;text-align:center">电费</th>
+          <th style="padding:6px 4px;border-bottom:1px solid #ebeef5;text-align:center">上月</th>
+          <th style="padding:6px 4px;border-bottom:1px solid #ebeef5;text-align:center">本月</th>
+          <th style="padding:6px 4px;border-bottom:1px solid #ebeef5;text-align:center">用量</th>
+          <th style="padding:6px 4px;border-bottom:1px solid #ebeef5;text-align:center">水费</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <div style="display:flex;align-items:center;justify-content:center;height:120px;color:#909399;font-size:14px">暂无账单数据，请先生成账单</div>
   </div>
 </div>
 </body>
