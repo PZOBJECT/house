@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>业务流图 — House 出租房管理系统</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#409eff;--primary-dark:#337ecc;
+  --success:#67c23a;--danger:#f56c6c;--warning:#e6a23c;
+  --text:#303133;--text2:#606266;--text3:#909399;
+  --bg:#f5f7fa;
+  --radius:14px;
+  --font:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);padding:30px;min-height:100vh}
+
+h1{font-size:22px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+h1 svg{color:var(--primary)}
+.subtitle{font-size:14px;color:var(--text3);margin-bottom:30px}
+
+/* ── 布局 ── */
+.canvas{max-width:1100px;margin:0 auto}
+
+/* ── 区域标题 ── */
+.section{margin-bottom:40px}
+.section-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:2px solid #e8ecf1}
+.section-title .badge{font-size:11px;padding:1px 8px;border-radius:8px;font-weight:600}
+.badge-blue{background:#ecf5ff;color:var(--primary)}
+.badge-green{background:#f0f9eb;color:var(--success)}
+.badge-orange{background:#fff7e6;color:#e6a23c}
+
+/* ── 实体卡片 ── */
+.entity-row{display:flex;gap:20px;flex-wrap:wrap}
+.entity{flex:1;min-width:220px;background:#fff;border-radius:var(--radius);border:1px solid #ebeef5;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.entity-header{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;padding-bottom:12px;border-bottom:1px solid #f0f2f5;margin-bottom:12px}
+.entity-header .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.entity .field{display:flex;justify-content:space-between;padding:4px 0;font-size:13px;border-bottom:1px solid #f5f7fa}
+.entity .field:last-child{border-bottom:none}
+.entity .field .key{color:var(--text3);font-weight:500}
+.entity .field .val{font-weight:600;color:var(--text)}
+.entity .val.pk{color:var(--danger);font-size:11px;background:#fef0f0;padding:0 6px;border-radius:4px}
+.entity .val.fk{color:var(--warning);font-size:11px;background:#fff7e6;padding:0 6px;border-radius:4px}
+
+/* ── 流程步骤 ── */
+.flow-row{display:flex;align-items:flex-start;gap:0;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:12px}
+.step-card{background:#fff;border-radius:12px;border:1px solid #ebeef5;padding:14px 18px;min-width:160px;box-shadow:0 1px 4px rgba(0,0,0,.04);transition:transform .2s}
+.step-card:hover{transform:translateY(-2px)}
+.step-num{display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.sn-1{background:var(--primary)}
+.sn-2{background:var(--success)}
+.sn-3{background:var(--warning)}
+.sn-4{background:var(--danger)}
+.sn-5{background:#764ba2}
+.sn-6{background:#00bcd4}
+.sn-7{background:#ff9800}
+.step-label{font-size:13px;font-weight:600;color:var(--text)}
+.step-desc{font-size:11px;color:var(--text3);margin-top:2px}
+.arrow{display:flex;align-items:center;padding:0 8px;color:#d0d0d0;font-size:18px;font-weight:300}
+.arrow-down{display:flex;align-items:center;justify-content:center;padding:4px 0;color:#d0d0d0;font-size:16px}
+
+/* ── 关联连线图 (SVG) ── */
+.rel-section{margin-bottom:40px}
+.rel-canvas{background:#fff;border-radius:var(--radius);border:1px solid #ebeef5;padding:20px;overflow-x:auto}
+.rel-canvas svg{display:block;margin:0 auto;max-width:100%;height:auto}
+.rel-label{font-size:11px;fill:var(--text3);font-weight:500}
+.rel-label-accent{font-size:11px;font-weight:600}
+.card-box{stroke-width:2;stroke:#e8ecf1;fill:#fff;rx:10;ry:10;transition:all .2s}
+.card-box:hover{stroke:var(--primary)}
+.card-title{font-size:14px;font-weight:700;fill:var(--text)}
+.card-field{font-size:11px;fill:var(--text3)}
+.card-key{font-size:11px;fill:var(--text3);font-weight:500}
+.card-val{font-size:11px;fill:var(--text);font-weight:600}
+.line-rel{stroke:#dcdfe6;stroke-width:1.5;fill:none;stroke-dasharray:5,3}
+.line-flow{stroke:var(--primary);stroke-width:2;fill:none}
+.dot-end{fill:var(--primary)}
+.dot-start{fill:var(--success)}
+
+/* ── 月度流程 ── */
+.month-cycle{background:#fff;border-radius:var(--radius);border:1px solid #ebeef5;padding:24px;display:flex;flex-direction:column;gap:8px}
+.cycle-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:#fafbfc;border-left:4px solid transparent;transition:background .2s}
+.cycle-row:hover{background:#f0f5ff}
+.cycle-row.c1{border-left-color:var(--primary);color:var(--primary)}
+.cycle-row.c2{border-left-color:var(--success);color:var(--success)}
+.cycle-row.c3{border-left-color:var(--warning);color:var(--warning)}
+.cycle-row.c4{border-left-color:var(--danger);color:var(--danger)}
+.cycle-row.c5{border-left-color:#764ba2;color:#764ba2}
+.cycle-row.c6{border-left-color:#00bcd4;color:#00bcd4}
+.cycle-row.c7{border-left-color:#ff9800;color:#ff9800}
+.cycle-index{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.cycle-label{font-size:14px;font-weight:600;color:var(--text);flex:1}
+.cycle-desc{font-size:12px;color:var(--text3)}
+.cycle-arrow{color:#dcdfe6;font-size:14px;margin:0 4px}
+</style>
+</head>
+<body>
+<div class="canvas">
+
+<h1>
+  <svg viewBox="0 0 24 24" width="24" height="24"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.15 4.5.5 1.1.35 1.5.5 1.5.5.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 14c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v12z" fill="currentColor"/><path d="M17.5 10.5c.88 0 1.73.09 2.5.26V9.24c-.79-.15-1.64-.24-2.5-.24-1.7 0-3.24.29-4.5.83v1.66c1.13-.64 2.7-.99 4.5-.99zM13 12.49v1.66c1.13-.64 2.7-.99 4.5-.99.88 0 1.73.09 2.5.26V11.9c-.79-.15-1.64-.24-2.5-.24-1.7 0-3.24.3-4.5.83zM17.5 14.33c-1.7 0-3.24.29-4.5.83v1.66c1.13-.64 2.7-.99 4.5-.99.88 0 1.73.09 2.5.26v-1.58c-.79-.16-1.64-.18-2.5-.18z" fill="currentColor"/></svg>
+  出租房收租管理系统 — 业务流图
+</h1>
+<div class="subtitle">完整展示房间 → 账单 → 缴费之间的数据关联与业务流程</div>
+
+<!-- ═══════════ 1. 核心实体 ═══════════ -->
+<div class="section">
+  <div class="section-title">
+    📦 核心数据实体
+    <span class="badge badge-blue">数据库表</span>
+  </div>
+  <div class="entity-row">
+    <!-- 房间 -->
+    <div class="entity">
+      <div class="entity-header">
+        <span class="dot" style="background:var(--primary)"></span>
+        🏠 房间表 (rooms)
+      </div>
+      <div class="field"><span class="key">房间号</span><span class="val">101 ~ 312 <span class="val pk">PK</span></span></div>
+      <div class="field"><span class="key">月租金</span><span class="val">¥1,200 (默认)</span></div>
+      <div class="field"><span class="key">电费单价</span><span class="val">¥1.00/度</span></div>
+      <div class="field"><span class="key">水费单价</span><span class="val">¥5.00/吨</span></div>
+      <div class="field"><span class="key">出租状态</span><span class="val" style="color:var(--success)">已租 | 未租</span></div>
+    </div>
+    <!-- 账单 -->
+    <div class="entity">
+      <div class="entity-header">
+        <span class="dot" style="background:var(--warning)"></span>
+        📋 账单表 (bills)
+      </div>
+      <div class="field"><span class="key">账单ID</span><span class="val">auto <span class="val pk">PK</span></span></div>
+      <div class="field"><span class="key">房间号</span><span class="val">关联 rooms <span class="val fk">FK</span></span></div>
+      <div class="field"><span class="key">月份</span><span class="val">2026-06 (唯一约束)</span></div>
+      <div class="field"><span class="key">水电读数</span><span class="val">上月/本月度数</span></div>
+      <div class="field"><span class="key">费用明细</span><span class="val">电费 + 水费 + 房租</span></div>
+    </div>
+    <!-- 缴费 -->
+    <div class="entity">
+      <div class="entity-header">
+        <span class="dot" style="background:var(--success)"></span>
+        💰 缴费状态
+      </div>
+      <div class="field"><span class="key">是否已缴</span><span class="val" style="color:var(--success)">已缴费 | 未缴费</span></div>
+      <div class="field"><span class="key">缴费时间</span><span class="val">paid_at DATETIME</span></div>
+      <div class="field"><span class="key">关联账单</span><span class="val">一对一关联 <span class="val fk">FK</span></span></div>
+      <div class="field"><span class="key">标记操作</span><span class="val">pay / unpay API</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ 2. 数据关联 ═══════════ -->
+<div class="rel-section">
+  <div class="section-title">
+    🔗 数据关联关系
+    <span class="badge badge-green">ER 关系</span>
+  </div>
+  <div class="rel-canvas">
+    <svg viewBox="0 0 1000 360" width="100%" height="360">
+      <!-- 定义箭头 -->
+      <defs>
+        <marker id="arrow1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#409eff"/></marker>
+        <marker id="arrow2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#e6a23c"/></marker>
+        <marker id="arrow3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#67c23a"/></marker>
+      </defs>
+
+      <!-- 房间卡片 -->
+      <rect class="card-box" x="60" y="40" width="240" height="140"/>
+      <text class="card-title" x="100" y="68" font-size="15">🏠 房间表 rooms</text>
+      <line x1="80" y1="80" x2="280" y2="80" stroke="#f0f2f5" stroke-width="1"/>
+      <text class="card-key" x="80" y="100">room_no</text>
+      <text class="card-val" x="210" y="100">PK 房间号</text>
+      <text class="card-key" x="80" y="120">rent_price</text>
+      <text class="card-val" x="210" y="120">月租金</text>
+      <text class="card-key" x="80" y="140">elec_price</text>
+      <text class="card-val" x="210" y="140">电费单价</text>
+      <text class="card-key" x="80" y="160">water_price</text>
+      <text class="card-val" x="210" y="160">水费单价</text>
+      <text class="card-key" x="80" y="178">is_rented</text>
+      <text class="card-val" x="210" y="178">出租状态</text>
+
+      <!-- 房间 → 账单 连线 -->
+      <text class="rel-label" x="355" y="80" text-anchor="middle">一对多</text>
+      <text class="rel-label" x="355" y="96" text-anchor="middle" fill="#e6a23c" font-weight="600">room_no 关联</text>
+      <path d="M300,110 C340,80 370,80 410,110" stroke="#e6a23c" stroke-width="1.5" fill="none" marker-end="url(#arrow2)"/>
+
+      <!-- 账单卡片 -->
+      <rect class="card-box" x="420" y="40" width="260" height="180"/>
+      <text class="card-title" x="458" y="68" font-size="15">📋 账单表 bills</text>
+      <line x1="440" y1="80" x2="660" y2="80" stroke="#f0f2f5" stroke-width="1"/>
+      <text class="card-key" x="440" y="100">id</text>
+      <text class="card-val" x="580" y="100">PK 账单ID</text>
+      <text class="card-key" x="440" y="120">room_no</text>
+      <text class="card-val" x="580" y="120" fill="#e6a23c">FK → rooms</text>
+      <text class="card-key" x="440" y="140">year, month</text>
+      <text class="card-val" x="580" y="140">账单月份</text>
+      <text class="card-key" x="440" y="160">elec_usage</text>
+      <text class="card-val" x="580" y="160">用电量</text>
+      <text class="card-key" x="440" y="180">water_usage</text>
+      <text class="card-val" x="580" y="180">用水量</text>
+      <text class="card-key" x="440" y="200">total_cost</text>
+      <text class="card-val" x="580" y="200">总费用</text>
+      <text class="card-key" x="440" y="218">is_paid</text>
+      <text class="card-val" x="580" y="218">缴费状态</text>
+
+      <!-- 账单 → 缴费 连线 -->
+      <text class="rel-label" x="670" y="120">一对一</text>
+      <text class="rel-label" x="670" y="136" fill="#67c23a" font-weight="600">is_paid 标记</text>
+      <path d="M680,130 C720,130 730,130 750,130" stroke="#67c23a" stroke-width="1.5" fill="none" marker-end="url(#arrow3)"/>
+
+      <!-- 缴费状态卡片 -->
+      <rect class="card-box" x="760" y="80" width="200" height="110"/>
+      <text class="card-title" x="798" y="106" font-size="14">💰 缴费状态</text>
+      <line x1="780" y1="116" x2="940" y2="116" stroke="#f0f2f5" stroke-width="1"/>
+      <text class="card-key" x="780" y="136">is_paid = 1</text>
+      <text class="card-val" x="900" y="136" fill="#67c23a">已缴费 ✓</text>
+      <text class="card-key" x="780" y="156">is_paid = 0</text>
+      <text class="card-val" x="900" y="156" fill="#f56c6c">未缴费 ✕</text>
+      <text class="card-key" x="780" y="176">paid_at</text>
+      <text class="card-val" x="900" y="176">缴费时间</text>
+
+      <!-- 底部流程标注 -->
+      <rect x="350" y="280" width="300" height="36" rx="18" fill="#f0f5ff" stroke="#b3d8ff" stroke-width="1"/>
+      <text x="500" y="303" text-anchor="middle" font-size="12" fill="#409eff" font-weight="600">账单表 bills 含 is_paid 字段，无独立缴费表</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══════════ 3. 业务流程（按月循环） ═══════════ -->
+<div class="section">
+  <div class="section-title">
+    🔄 月度业务流转
+    <span class="badge badge-orange">每月一次</span>
+  </div>
+  <div class="month-cycle">
+    <div class="cycle-row c1">
+      <span class="cycle-index" style="background:var(--primary)">1</span>
+      <span class="cycle-label">月初 — 生成当月账单</span>
+      <span class="cycle-desc">POST /api/bills/generate → 为所有已租房间创建当月账单</span>
+      <span class="cycle-arrow">→</span>
+    </div>
+    <div class="cycle-row c2">
+      <span class="cycle-index" style="background:var(--success)">2</span>
+      <span class="cycle-label">录入电表读数</span>
+      <span class="cycle-desc">读取每间房电表，填入"上月读数"自动带出，"本月读数"手动录入</span>
+      <span class="cycle-arrow">→</span>
+    </div>
+    <div class="cycle-row c3">
+      <span class="cycle-index" style="background:var(--warning)">3</span>
+      <span class="cycle-label">录入水表读数</span>
+      <span class="cycle-desc">读取每间房水表，填入底数，自动计算用水量</span>
+      <span class="cycle-arrow">→</span>
+    </div>
+    <div class="cycle-row c4">
+      <span class="cycle-index" style="background:var(--danger)">4</span>
+      <span class="cycle-label">自动计算费用</span>
+      <span class="cycle-desc">用电量×电费单价 + 用水量×水费单价 + 月租金 = 总费用</span>
+      <span class="cycle-arrow">→</span>
+    </div>
+    <div class="cycle-row c5">
+      <span class="cycle-index" style="background:#764ba2">5</span>
+      <span class="cycle-label">通知租客 / 催收</span>
+      <span class="cycle-desc">查看数据大屏未缴费列表，确认待催收房间</span>
+      <span class="cycle-arrow">→</span>
+    </div>
+    <div class="cycle-row c6">
+      <span class="cycle-index" style="background:#00bcd4">6</span>
+      <span class="cycle-label">收取费用 → 标记已缴费</span>
+      <span class="cycle-desc">收到费用后，在系统标记该房间当月为已缴费（PUT /api/bills/:id/pay）</span>
+      <span class="cycle-arrow">→</span>
+    </div>
+    <div class="cycle-row c7">
+      <span class="cycle-index" style="background:#ff9800">7</span>
+      <span class="cycle-label">月末 — 数据汇总 & 开收据</span>
+      <span class="cycle-desc">数据大屏展示月度汇总，已缴账单可生成收据图片下载</span>
+      <span class="cycle-arrow">→</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ 4. API 关联 ═══════════ -->
+<div class="section">
+  <div class="section-title">
+    🌐 API 接口映射
+    <span class="badge badge-blue">前后端交互</span>
+  </div>
+  <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:var(--radius);overflow:hidden;border:1px solid #ebeef5;box-shadow:0 1px 4px rgba(0,0,0,.04)">
+    <thead>
+      <tr style="background:#f5f7fa;font-size:12px;font-weight:600;color:var(--text3);text-align:left">
+        <th style="padding:10px 14px;border-bottom:1px solid #ebeef5">接口</th>
+        <th style="padding:10px 14px;border-bottom:1px solid #ebeef5">功能</th>
+        <th style="padding:10px 14px;border-bottom:1px solid #ebeef5">关联页面</th>
+      </tr>
+    </thead>
+    <tbody style="font-size:13px">
+      <tr style="border-bottom:1px solid #f5f7fa"><td style="padding:8px 14px"><code style="background:#ecf5ff;color:var(--primary);padding:1px 6px;border-radius:4px;font-size:12px">GET /api/rooms</code></td><td style="padding:8px 14px;font-weight:600">获取房间列表（支持出租状态筛选）</td><td style="padding:8px 14px;color:var(--text3)">房间管理、数据大屏</td></tr>
+      <tr style="border-bottom:1px solid #f5f7fa"><td style="padding:8px 14px"><code style="background:#ecf5ff;color:var(--primary);padding:1px 6px;border-radius:4px;font-size:12px">PUT /api/rooms/:room_no</code></td><td style="padding:8px 14px;font-weight:600">修改房间价格、出租状态</td><td style="padding:8px 14px;color:var(--text3)">房间管理</td></tr>
+      <tr style="border-bottom:1px solid #f5f7fa"><td style="padding:8px 14px"><code style="background:#ecf5ff;color:var(--primary);padding:1px 6px;border-radius:4px;font-size:12px">POST /api/bills/generate</code></td><td style="padding:8px 14px;font-weight:600">按年月生成当月所有已租房间账单</td><td style="padding:8px 14px;color:var(--text3)">月度账单</td></tr>
+      <tr style="border-bottom:1px solid #f5f7fa"><td style="padding:8px 14px"><code style="background:#ecf5ff;color:var(--primary);padding:1px 6px;border-radius:4px;font-size:12px">GET /api/bills/list</code></td><td style="padding:8px 14px;font-weight:600">获取账单列表（年月/房间/状态筛选）</td><td style="padding:8px 14px;color:var(--text3)">月度账单、历史账单</td></tr>
+      <tr style="border-bottom:1px solid #f5f7fa"><td style="padding:8px 14px"><code style="background:#ecf5ff;color:var(--primary);padding:1px 6px;border-radius:4px;font-size:12px">PUT /api/bills/:id</code></td><td style="padding:8px 14px;font-weight:600">修改水电读数（未缴费可改）</td><td style="padding:8px 14px;color:var(--text3)">月度账单</td></tr>
+      <tr style="border-bottom:1px solid #f5f7fa"><td style="padding:8px 14px"><code style="background:#f0f9eb;color:var(--success);padding:1px 6px;border-radius:4px;font-size:12px">PUT /api/bills/:id/pay</code></td><td style="padding:8px 14px;font-weight:600;color:var(--success)">标记已缴费 ✅</td><td style="padding:8px 14px;color:var(--text3)">月度账单、数据大屏</td></tr>
+      <tr style="border-bottom:1px solid #f5f7fa"><td style="padding:8px 14px"><code style="background:#fef0f0;color:var(--danger);padding:1px 6px;border-radius:4px;font-size:12px">PUT /api/bills/:id/unpay</code></td><td style="padding:8px 14px;font-weight:600;color:var(--danger)">取消缴费 ❌</td><td style="padding:8px 14px;color:var(--text3)">月度账单</td></tr>
+      <tr style="border-bottom:1px solid #f5f7fa"><td style="padding:8px 14px"><code style="background:#f0f9eb;color:var(--success);padding:1px 6px;border-radius:4px;font-size:12px">GET /api/bills/:id/receipt</code></td><td style="padding:8px 14px;font-weight:600">获取收据数据（用于截图下载）</td><td style="padding:8px 14px;color:var(--text3)">收据生成</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════ 5. 页面 & 功能映射 ═══════════ -->
+<div class="section">
+  <div class="section-title">
+    🖥️ 页面功能矩阵
+    <span class="badge badge-green">前端路由</span>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div style="background:#fff;border-radius:var(--radius);border:1px solid #ebeef5;padding:16px">
+      <div style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:10px">
+        <span style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#4facfe,#00f2fe);color:#fff;font-size:14px">📊</span>
+        数据大屏 /dashboard
+      </div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.8">
+        <span style="display:inline-block;background:#f0f9eb;color:var(--success);padding:0 6px;border-radius:4px">GET rooms</span> 出租率<br>
+        <span style="display:inline-block;background:#f0f9eb;color:var(--success);padding:0 6px;border-radius:4px">GET bills</span> 当月总收入、已缴/未缴统计<br>
+        <span style="display:inline-block;background:#fef0f0;color:var(--danger);padding:0 6px;border-radius:4px">pay</span> 点击未缴 → 弹窗 → 标记已缴费
+      </div>
+    </div>
+    <div style="background:#fff;border-radius:var(--radius);border:1px solid #ebeef5;padding:16px">
+      <div style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:10px">
+        <span style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-size:14px">🏠</span>
+        房间管理 /rooms
+      </div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.8">
+        <span style="display:inline-block;background:#f0f9eb;color:var(--success);padding:0 6px;border-radius:4px">GET rooms</span> 楼层筛选 + 房间列表<br>
+        <span style="display:inline-block;background:#f0f9eb;color:var(--success);padding:0 6px;border-radius:4px">PUT rooms</span> 修改租金/单价/出租状态
+      </div>
+    </div>
+    <div style="background:#fff;border-radius:var(--radius);border:1px solid #ebeef5;padding:16px">
+      <div style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:10px">
+        <span style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff;font-size:14px">📋</span>
+        月度账单 /bills
+      </div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.8">
+        <span style="display:inline-block;background:#f0f9eb;color:var(--success);padding:0 6px;border-radius:4px">POST generate</span> 生成当月账单<br>
+        <span style="display:inline-block;background:#f0f9eb;color:var(--success);padding:0 6px;border-radius:4px">PUT bills/:id</span> 录入水电读数<br>
+        <span style="display:inline-block;background:#f0f9eb;color:var(--success);padding:0 6px;border-radius:4px">pay/unpay</span> 标记/取消缴费
+      </div>
+    </div>
+    <div style="background:#fff;border-radius:var(--radius);border:1px solid #ebeef5;padding:16px">
+      <div style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:10px">
+        <span style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#11998e,#38ef7d);color:#fff;font-size:14px">📜</span>
+        历史账单 /history
+      </div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.8">
+        <span style="display:inline-block;background:#f0f9eb;color:var(--success);padding:0 6px;border-radius:4px">GET bills</span> 按月份筛选历史记录<br>
+        <span style="display:inline-block;background:#f0f9eb;color:var(--success);padding:0 6px;border-radius:4px">GET receipt</span> 查看/下载已缴收据
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
