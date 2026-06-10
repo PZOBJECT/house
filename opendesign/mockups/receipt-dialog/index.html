@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>房租收据 — House 出租房管理系统</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --p:#409eff;--pd:#337ecc;
+  --s:#67c23a;--d:#f56c6c;--w:#e6a23c;
+  --t1:#303133;--t2:#606266;--t3:#909399;
+  --bg:#f0f2f5;
+  --font:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--t1);padding:40px;min-height:100vh}
+/* ── 背景模拟 ── */
+.dialog-mask{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center}
+.dialog-box{background:#fff;border-radius:8px;width:560px;box-shadow:0 4px 20px rgba(0,0,0,.2);overflow:hidden}
+.dialog-hdr{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #ebeef5}
+.dialog-hdr h3{font-size:16px;font-weight:700;color:var(--t1)}
+.dialog-hdr .close{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;font-size:18px;color:var(--t3);transition:all .2s}
+.dialog-hdr .close:hover{background:#f5f7fa;color:var(--t1)}
+.dialog-body{padding:28px 24px}
+.dialog-ftr{display:flex;justify-content:flex-end;gap:10px;padding:12px 20px;border-top:1px solid #ebeef5}
+.dialog-ftr .btn{padding:8px 16px;border-radius:6px;border:1px solid;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s}
+.dialog-ftr .btn-close{background:#fff;color:var(--t2);border-color:#dcdfe6}
+.dialog-ftr .btn-close:hover{color:var(--p);border-color:var(--p)}
+.dialog-ftr .btn-primary{background:var(--p);color:#fff;border-color:var(--p)}
+.dialog-ftr .btn-primary:hover{background:var(--pd)}
+/* ── 收据内容 ── */
+.receipt{padding:0;font-size:16px;color:#333}
+.r-title{text-align:center;font-size:24px;font-weight:700;margin-bottom:24px;letter-spacing:4px}
+.r-info{margin-bottom:20px}
+.r-row{margin-bottom:8px;font-size:16px}
+.r-row .rv{font-weight:700}
+.r-table{width:100%;border-collapse:collapse;margin-bottom:20px}
+.r-table th,.r-table td{border:1px solid #dcdfe6;padding:10px 8px;text-align:center;font-size:15px}
+.r-table thead th{background:#f5f7fa;font-weight:700}
+.r-table tfoot td{font-weight:700}
+.total-label{text-align:right;padding-right:14px}
+.total-amount{color:var(--w);font-size:18px}
+.r-footer{display:flex;justify-content:space-between;margin-top:28px;padding:0 10px;font-size:15px}
+</style>
+</head>
+<body>
+<div class="dialog-mask">
+  <div class="dialog-box">
+    <!-- 头部 -->
+    <div class="dialog-hdr">
+      <h3>房租收据</h3>
+      <div class="close">×</div>
+    </div>
+
+    <!-- 主体：收据内容 -->
+    <div class="dialog-body">
+      <div class="receipt">
+        <div class="r-title">房租收据</div>
+        <div class="r-info">
+          <div class="r-row"><span>房间号：</span><span class="rv">201</span></div>
+          <div class="r-row"><span>账期：</span><span class="rv">2026年06月</span></div>
+          <div class="r-row"><span>收费日期：</span><span class="rv">2026-06-05</span></div>
+        </div>
+
+        <table class="r-table">
+          <thead>
+            <tr><th>项目</th><th>上月读数</th><th>本月读数</th><th>用量</th><th>单价</th><th>金额（元）</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>电费</td><td>2,010</td><td>2,140</td><td>130</td><td>1.00元/度</td><td>130.00</td></tr>
+            <tr><td>水费</td><td>55</td><td>61</td><td>6</td><td>5.00元/吨</td><td>30.00</td></tr>
+            <tr><td>房租</td><td>-</td><td>-</td><td>-</td><td>1,200元/月</td><td>1,200.00</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td colspan="5" class="total-label">合计</td><td class="total-amount">1,360.00元</td></tr>
+          </tfoot>
+        </table>
+
+        <div class="r-footer">
+          <div>收款人：___________</div>
+          <div>日期：___________</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="dialog-ftr">
+      <div class="btn btn-close">关闭</div>
+      <div class="btn btn-primary">下载收据图片</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

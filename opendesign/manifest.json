@@ -6,32 +6,34 @@
       "label": "Mockups",
       "groups": [
         {
-          "slug": "business-flow",
-          "label": "业务流图（Business Flow）",
-          "files": [
-            { "label": "完整业务流 + ER 关联 + 月度循环", "path": "mockups/business-flow/index.html" }
-          ]
-        },
-        {
           "slug": "dashboard",
           "label": "数据大屏（Dashboard）",
-          "files": [
-            { "label": "数据大屏 KPI + 缴费明细", "path": "mockups/dashboard/index.html" }
-          ]
+          "files": ["index.html"]
         },
         {
           "slug": "room-manage",
           "label": "房间管理（RoomManage）",
-          "files": [
-            { "label": "房间列表 + 出租统计", "path": "mockups/room-manage/index.html" }
-          ]
+          "files": ["index.html"]
         },
         {
           "slug": "bill-manage",
           "label": "月度账单（BillManage）",
-          "files": [
-            { "label": "账单录入 + 缴费管理", "path": "mockups/bill-manage/index.html" }
-          ]
+          "files": ["index.html"]
+        },
+        {
+          "slug": "bill-history",
+          "label": "历史账单（BillHistory）",
+          "files": ["index.html"]
+        },
+        {
+          "slug": "receipt-dialog",
+          "label": "收据弹窗（ReceiptDialog）",
+          "files": ["index.html"]
+        },
+        {
+          "slug": "business-flow",
+          "label": "业务流图（Business Flow）",
+          "files": ["index.html"]
         }
       ]
     },
@@ -42,10 +44,7 @@
         {
           "slug": "house",
           "label": "House 项目设计系统",
-          "files": [
-            { "label": "颜色与字体 Token", "path": "design-systems/house/tokens/colors_and_type.css" },
-            { "label": "设计规范文档", "path": "design-systems/house/README.md" }
-          ]
+          "files": []
         }
       ]
     }
