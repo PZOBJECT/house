@@ -8,32 +8,44 @@
         {
           "slug": "dashboard",
           "label": "数据大屏（Dashboard）",
-          "files": ["index.html"]
+          "files": [
+            {"path": "mockups/dashboard/index.html", "label": "数据大屏"}
+          ]
         },
         {
           "slug": "room-manage",
           "label": "房间管理（RoomManage）",
-          "files": ["index.html"]
+          "files": [
+            {"path": "mockups/room-manage/index.html", "label": "房间管理"}
+          ]
         },
         {
           "slug": "bill-manage",
           "label": "月度账单（BillManage）",
-          "files": ["index.html"]
+          "files": [
+            {"path": "mockups/bill-manage/index.html", "label": "月度账单"}
+          ]
         },
         {
           "slug": "bill-history",
           "label": "历史账单（BillHistory）",
-          "files": ["index.html"]
+          "files": [
+            {"path": "mockups/bill-history/index.html", "label": "历史账单"}
+          ]
         },
         {
           "slug": "receipt-dialog",
           "label": "收据弹窗（ReceiptDialog）",
-          "files": ["index.html"]
+          "files": [
+            {"path": "mockups/receipt-dialog/index.html", "label": "收据弹窗"}
+          ]
         },
         {
           "slug": "business-flow",
           "label": "业务流图（Business Flow）",
-          "files": ["index.html"]
+          "files": [
+            {"path": "mockups/business-flow/index.html", "label": "业务流图"}
+          ]
         }
       ]
     },
