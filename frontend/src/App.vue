@@ -21,7 +21,7 @@
       </el-button>
     </el-header>
     <el-container>
-      <el-aside width="200px" style="background: #faf8f5">
+      <el-aside width="200px" style="background: #f0f4f8">
         <el-menu
           :default-active="activeMenu"
           router
@@ -59,10 +59,10 @@ const isDashboard = computed(() => route.path === '/dashboard')
 
 <style>
 :root {
-  --el-bg-color-page: #faf8f5;
+  --el-bg-color-page: #f0f4f8;
 }
 body {
-  background: #faf8f5;
+  background: #f0f4f8;
 }
 .dash-btn {
   display: inline-flex !important;

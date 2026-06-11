@@ -456,7 +456,7 @@ onMounted(fetchData)
   font-size: 16px;
   font-weight: 700;
   padding-bottom: 14px;
-  border-bottom: 1px solid #ede8e2;
+  border-bottom: 1px solid #dce2ea;
   margin-bottom: 14px;
 }
 
@@ -525,7 +525,7 @@ onMounted(fetchData)
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   padding: 10px 12px;
-  background: #f5f2ed;
+  background: #e8edf3;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
@@ -540,7 +540,7 @@ onMounted(fetchData)
   grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
   padding: 10px 12px;
-  border-bottom: 1px solid #ede8e2;
+  border-bottom: 1px solid #dce2ea;
   text-align: center;
 }
 

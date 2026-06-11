@@ -297,7 +297,7 @@ onMounted(async () => {
   gap: 0;
   margin-bottom: 10px;
   flex-shrink: 0;
-  background: linear-gradient(135deg, #f8f6f0 0%, #f5f2ed 100%);
+  background: linear-gradient(135deg, #f0f4f8 0%, #e8edf3 100%);
   border-radius: 12px;
   padding: 12px 18px;
   border: 1px solid #e4e9f2;
@@ -416,7 +416,7 @@ onMounted(async () => {
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
-  background: #f3f1ec;
+  background: #e2e8f0;
   border: 2px solid transparent;
   color: #606266;
 }
