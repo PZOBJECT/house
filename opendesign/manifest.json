@@ -5,59 +5,20 @@
       "id": "mockups",
       "label": "Mockups",
       "groups": [
-        {
-          "slug": "dashboard",
-          "label": "数据大屏（Dashboard）",
-          "files": [
-            {"path": "mockups/dashboard/index.html", "label": "数据大屏"}
-          ]
-        },
-        {
-          "slug": "room-manage",
-          "label": "房间管理（RoomManage）",
-          "files": [
-            {"path": "mockups/room-manage/index.html", "label": "房间管理"}
-          ]
-        },
-        {
-          "slug": "bill-manage",
-          "label": "月度账单（BillManage）",
-          "files": [
-            {"path": "mockups/bill-manage/index.html", "label": "月度账单"}
-          ]
-        },
-        {
-          "slug": "bill-history",
-          "label": "历史账单（BillHistory）",
-          "files": [
-            {"path": "mockups/bill-history/index.html", "label": "历史账单"}
-          ]
-        },
-        {
-          "slug": "receipt-dialog",
-          "label": "收据弹窗（ReceiptDialog）",
-          "files": [
-            {"path": "mockups/receipt-dialog/index.html", "label": "收据弹窗"}
-          ]
-        },
-        {
-          "slug": "business-flow",
-          "label": "业务流图（Business Flow）",
-          "files": [
-            {"path": "mockups/business-flow/index.html", "label": "业务流图"}
-          ]
-        }
+        {"slug":"bg-options","label":"背景色方案对比","files":[{"path":"mockups/bg-options/index.html","label":"背景色方案对比"}]},
+        {"slug":"dashboard","label":"数据大屏（Dashboard）","files":[{"path":"mockups/dashboard/index.html","label":"数据大屏"}]},
+        {"slug":"room-manage","label":"房间管理（RoomManage）","files":[{"path":"mockups/room-manage/index.html","label":"房间管理"}]},
+        {"slug":"bill-manage","label":"月度账单（BillManage）","files":[{"path":"mockups/bill-manage/index.html","label":"月度账单"}]},
+        {"slug":"bill-history","label":"历史账单（BillHistory）","files":[{"path":"mockups/bill-history/index.html","label":"历史账单"}]},
+        {"slug":"receipt-dialog","label":"收据弹窗（ReceiptDialog）","files":[{"path":"mockups/receipt-dialog/index.html","label":"收据弹窗"}]},
+        {"slug":"business-flow","label":"业务流图（Business Flow）","files":[{"path":"mockups/business-flow/index.html","label":"业务流图"}]}
       ]
     },
     {
       "id": "design-systems",
       "label": "Design Systems",
       "groups": [
-        {
-          "slug": "house",
-          "label": "House 项目设计系统",
-          "files": []
-        }
+        {"slug":"house","label":"House 项目设计系统","files":[]}
       ]
     }
   ]

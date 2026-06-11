@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>背景色方案对比 — House</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--el-font-family:"Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif}
+body{font-family:var(--el-font-family);background:#1a1a2e;color:#fff;padding:30px}
+h1{text-align:center;font-size:24px;margin-bottom:8px;letter-spacing:1px}
+.sub{text-align:center;color:#888;margin-bottom:28px;font-size:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:1400px;margin:0 auto}
+.card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.3);transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #eee}
+.card-header h3{font-size:14px;color:#333;font-weight:700}
+.card-header span{font-size:11px;padding:3px 10px;border-radius:6px;font-weight:600}
+.badge-current{background:#f0f0f0;color:#666}
+.badge-white{background:#e8f5e9;color:#2e7d32}
+.badge-warm{background:#fff3e0;color:#e65100}
+.badge-cool{background:#e3f2fd;color:#1565c0}
+.badge-dark{background:#1a1a2e;color:#fff}
+.demo{height:320px;overflow:hidden;position:relative}
+.demo iframe{width:100%;height:100%;border:none;pointer-events:none}
+.demo-label{position:absolute;bottom:0;left:0;right:0;padding:8px 12px;font-size:12px;backdrop-filter:blur(8px);color:rgba(255,255,255,.9)}
+</style>
+</head>
+<body>
+<h1>🎨 背景色方案对比</h1>
+<p class="sub">下方展示了数据大屏页面在 5 种背景色下的效果，点击图片可查看对应方案</p>
+
+<div class="grid">
+  <div class="card">
+    <div class="card-header"><h3>当前方案 (Current)</h3><span class="badge-current">#f2f3f5</span></div>
+    <div class="demo" style="background:#f2f3f5;padding:16px">
+      <div style="display:flex;flex-direction:column;gap:10px;height:100%;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;flex-shrink:0">
+          <div style="display:flex;align-items:center;gap:6px"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3l-3-2.7z" fill="#409eff"/></svg><span style="font-size:16px;font-weight:700;color:#303133">2026年06月 数据概览</span></div>
+          <span style="font-size:11px;color:#909399">2026年6月10日</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:10px;flex-shrink:0">
+          <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">当月总收入</span><div><span style="font-size:22px;font-weight:800">0.00</span><span style="font-size:12px;opacity:.7;margin-left:3px">元</span></div></div>
+          <div style="background:linear-gradient(135deg,#11998e,#38ef7d);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">已缴费</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">/0间</span></div></div>
+          <div style="background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">未缴费</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">间</span></div></div>
+          <div style="background:linear-gradient(135deg,#4facfe,#00f2fe);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">出租率</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">%</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h3>纯白方案 (Pure White)</h3><span class="badge-white">#ffffff</span></div>
+    <div class="demo" style="background:#ffffff;padding:16px">
+      <div style="display:flex;flex-direction:column;gap:10px;height:100%;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;flex-shrink:0">
+          <div style="display:flex;align-items:center;gap:6px"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3l-3-2.7z" fill="#409eff"/></svg><span style="font-size:16px;font-weight:700;color:#303133">2026年06月 数据概览</span></div>
+          <span style="font-size:11px;color:#909399">2026年6月10日</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:10px;flex-shrink:0">
+          <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">当月总收入</span><div><span style="font-size:22px;font-weight:800">0.00</span><span style="font-size:12px;opacity:.7;margin-left:3px">元</span></div></div>
+          <div style="background:linear-gradient(135deg,#11998e,#38ef7d);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">已缴费</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">/0间</span></div></div>
+          <div style="background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">未缴费</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">间</span></div></div>
+          <div style="background:linear-gradient(135deg,#4facfe,#00f2fe);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">出租率</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">%</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h3>暖白方案 (Warm White)</h3><span class="badge-warm">#faf8f5</span></div>
+    <div class="demo" style="background:#faf8f5;padding:16px">
+      <div style="display:flex;flex-direction:column;gap:10px;height:100%;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;flex-shrink:0">
+          <div style="display:flex;align-items:center;gap:6px"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3l-3-2.7z" fill="#409eff"/></svg><span style="font-size:16px;font-weight:700;color:#303133">2026年06月 数据概览</span></div>
+          <span style="font-size:11px;color:#909399">2026年6月10日</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:10px;flex-shrink:0">
+          <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">当月总收入</span><div><span style="font-size:22px;font-weight:800">0.00</span><span style="font-size:12px;opacity:.7;margin-left:3px">元</span></div></div>
+          <div style="background:linear-gradient(135deg,#11998e,#38ef7d);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">已缴费</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">/0间</span></div></div>
+          <div style="background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">未缴费</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">间</span></div></div>
+          <div style="background:linear-gradient(135deg,#4facfe,#00f2fe);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">出租率</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">%</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h3>冷灰方案 (Cool Gray)</h3><span class="badge-cool">#f0f4f8</span></div>
+    <div class="demo" style="background:#f0f4f8;padding:16px">
+      <div style="display:flex;flex-direction:column;gap:10px;height:100%;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;flex-shrink:0">
+          <div style="display:flex;align-items:center;gap:6px"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3l-3-2.7z" fill="#409eff"/></svg><span style="font-size:16px;font-weight:700;color:#303133">2026年06月 数据概览</span></div>
+          <span style="font-size:11px;color:#909399">2026年6月10日</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:10px;flex-shrink:0">
+          <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">当月总收入</span><div><span style="font-size:22px;font-weight:800">0.00</span><span style="font-size:12px;opacity:.7;margin-left:3px">元</span></div></div>
+          <div style="background:linear-gradient(135deg,#11998e,#38ef7d);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">已缴费</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">/0间</span></div></div>
+          <div style="background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">未缴费</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">间</span></div></div>
+          <div style="background:linear-gradient(135deg,#4facfe,#00f2fe);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">出租率</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">%</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="grid-column:1/2">
+    <div class="card-header"><h3>深色方案 (Dark Mode)</h3><span class="badge-dark">#0f172a</span></div>
+    <div class="demo" style="background:#0f172a;padding:16px">
+      <div style="display:flex;flex-direction:column;gap:10px;height:100%;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;flex-shrink:0">
+          <div style="display:flex;align-items:center;gap:6px"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3l-3-2.7z" fill="#409eff"/></svg><span style="font-size:16px;font-weight:700;color:#e2e8f0">2026年06月 数据概览</span></div>
+          <span style="font-size:11px;color:#94a3b8">2026年6月10日</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:10px;flex-shrink:0">
+          <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">当月总收入</span><div><span style="font-size:22px;font-weight:800">0.00</span><span style="font-size:12px;opacity:.7;margin-left:3px">元</span></div></div>
+          <div style="background:linear-gradient(135deg,#11998e,#38ef7d);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">已缴费</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">/0间</span></div></div>
+          <div style="background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">未缴费</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">间</span></div></div>
+          <div style="background:linear-gradient(135deg,#4facfe,#00f2fe);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">出租率</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">%</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="grid-column:2/3">
+    <div class="card-header"><h3>渐变方案 (Gradient)</h3><span class="badge-white">渐变过渡</span></div>
+    <div class="demo" style="background:linear-gradient(180deg,#f4f7fc 0%,#ffffff 100%);padding:16px">
+      <div style="display:flex;flex-direction:column;gap:10px;height:100%;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;flex-shrink:0">
+          <div style="display:flex;align-items:center;gap:6px"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3l-3-2.7z" fill="#409eff"/></svg><span style="font-size:16px;font-weight:700;color:#303133">2026年06月 数据概览</span></div>
+          <span style="font-size:11px;color:#909399">2026年6月10日</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:10px;flex-shrink:0">
+          <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">当月总收入</span><div><span style="font-size:22px;font-weight:800">0.00</span><span style="font-size:12px;opacity:.7;margin-left:3px">元</span></div></div>
+          <div style="background:linear-gradient(135deg,#11998e,#38ef7d);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">已缴费</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">/0间</span></div></div>
+          <div style="background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">未缴费</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">间</span></div></div>
+          <div style="background:linear-gradient(135deg,#4facfe,#00f2fe);color:#fff;border-radius:14px;padding:14px 16px"><span style="font-size:11px;opacity:.85">出租率</span><div><span style="font-size:22px;font-weight:800">0</span><span style="font-size:12px;opacity:.7;margin-left:3px">%</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:24px;color:#888;font-size:13px">
+  ⬆ 以上是数据大屏在 6 种背景色下的效果预览
+</div>
+</body>
+</html>
