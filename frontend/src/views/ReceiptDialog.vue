@@ -183,7 +183,7 @@ defineExpose({ open })
 }
 
 .receipt-table thead th {
-  background: #f5f7fa;
+  background: #f5f2ed;
   font-weight: bold;
 }
 

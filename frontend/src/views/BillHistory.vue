@@ -241,7 +241,7 @@ onMounted(fetchBills)
   align-items: center;
   gap: 8px;
   padding: 5px 10px;
-  background: #f5f7fa;
+  background: #f5f2ed;
   border-radius: 10px;
   border: 1px solid #e8ecf1;
 }
@@ -279,7 +279,7 @@ onMounted(fetchBills)
   gap: 0;
   margin-bottom: 10px;
   flex-shrink: 0;
-  background: #f5f7fa;
+  background: #f5f2ed;
   border-radius: 10px;
   padding: 10px 16px;
   border: 1px solid #e8ecf1;
@@ -372,7 +372,7 @@ onMounted(fetchBills)
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
-  background: #f5f7fa;
+  background: #f3f1ec;
   border: 2px solid transparent;
   color: #606266;
 }
