@@ -1,20 +1,19 @@
 {
-  "generated": "2026-06-08T14:30:00Z",
+  "generated": "2026-06-11T14:30:00Z",
   "sections": [
     {
       "id": "mockups",
       "label": "Mockups",
       "groups": [
-        {"slug":"style-pure-minimal","label":"🥇 极简白 · Pure Minimal","files":[{"path":"mockups/style-pure-minimal/index.html","label":"数据大屏"}]},
-        {"slug":"style-dark-gold","label":"🥇 暗夜金 · Dark Gold","files":[{"path":"mockups/style-dark-gold/index.html","label":"数据大屏"}]},
-        {"slug":"style-mist-blue","label":"🥇 雾蓝 · Mist Blue","files":[{"path":"mockups/style-mist-blue/index.html","label":"数据大屏"}]},
-        {"slug":"style-modern-slate","label":"🥇 现代灰 · Modern Slate","files":[{"path":"mockups/style-modern-slate/index.html","label":"数据大屏"}]},
-        {"slug":"dashboard","label":"数据大屏（Dashboard）","files":[{"path":"mockups/dashboard/index.html","label":"数据大屏"}]},
-        {"slug":"room-manage","label":"房间管理（RoomManage）","files":[{"path":"mockups/room-manage/index.html","label":"房间管理"}]},
-        {"slug":"bill-manage","label":"月度账单（BillManage）","files":[{"path":"mockups/bill-manage/index.html","label":"月度账单"}]},
-        {"slug":"bill-history","label":"历史账单（BillHistory）","files":[{"path":"mockups/bill-history/index.html","label":"历史账单"}]},
-        {"slug":"receipt-dialog","label":"收据弹窗（ReceiptDialog）","files":[{"path":"mockups/receipt-dialog/index.html","label":"收据弹窗"}]},
-        {"slug":"business-flow","label":"业务流图（Business Flow）","files":[{"path":"mockups/business-flow/index.html","label":"业务流图"}]}
+        {"slug":"kosoku","label":"🥇 光束 · Kōsoku（玻璃质感）","files":[{"path":"mockups/kosoku/index.html","label":"数据大屏"}]},
+        {"slug":"schrift","label":"🥇 Schrift（暗色终端/无卡片）","files":[{"path":"mockups/schrift/index.html","label":"数据大屏"}]},
+        {"slug":"tatami","label":"🥇 畳 · Tatami（纸本和风）","files":[{"path":"mockups/tatami/index.html","label":"数据大屏"}]},
+        {"slug":"dashboard","label":"数据大屏（同步）","files":[{"path":"mockups/dashboard/index.html","label":"数据大屏"}]},
+        {"slug":"room-manage","label":"房间管理（同步）","files":[{"path":"mockups/room-manage/index.html","label":"房间管理"}]},
+        {"slug":"bill-manage","label":"月度账单（同步）","files":[{"path":"mockups/bill-manage/index.html","label":"月度账单"}]},
+        {"slug":"bill-history","label":"历史账单（同步）","files":[{"path":"mockups/bill-history/index.html","label":"历史账单"}]},
+        {"slug":"receipt-dialog","label":"收据弹窗（同步）","files":[{"path":"mockups/receipt-dialog/index.html","label":"收据弹窗"}]},
+        {"slug":"business-flow","label":"业务流图","files":[{"path":"mockups/business-flow/index.html","label":"业务流图"}]}
       ]
     },
     {
