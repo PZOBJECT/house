@@ -5,7 +5,10 @@
       "id": "mockups",
       "label": "Mockups",
       "groups": [
-        {"slug":"bg-options","label":"背景色方案对比","files":[{"path":"mockups/bg-options/index.html","label":"背景色方案对比"}]},
+        {"slug":"style-pure-minimal","label":"🥇 极简白 · Pure Minimal","files":[{"path":"mockups/style-pure-minimal/index.html","label":"数据大屏"}]},
+        {"slug":"style-dark-gold","label":"🥇 暗夜金 · Dark Gold","files":[{"path":"mockups/style-dark-gold/index.html","label":"数据大屏"}]},
+        {"slug":"style-mist-blue","label":"🥇 雾蓝 · Mist Blue","files":[{"path":"mockups/style-mist-blue/index.html","label":"数据大屏"}]},
+        {"slug":"style-modern-slate","label":"🥇 现代灰 · Modern Slate","files":[{"path":"mockups/style-modern-slate/index.html","label":"数据大屏"}]},
         {"slug":"dashboard","label":"数据大屏（Dashboard）","files":[{"path":"mockups/dashboard/index.html","label":"数据大屏"}]},
         {"slug":"room-manage","label":"房间管理（RoomManage）","files":[{"path":"mockups/room-manage/index.html","label":"房间管理"}]},
         {"slug":"bill-manage","label":"月度账单（BillManage）","files":[{"path":"mockups/bill-manage/index.html","label":"月度账单"}]},

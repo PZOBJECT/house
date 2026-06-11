@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>极简白 · Pure Minimal</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#fafafa;--bg-card:#ffffff;--text:#18181b;--text-secondary:#71717a;--text-muted:#a1a1aa;--border:#e4e4e7;--accent:#3b82f6;--accent-hover:#2563eb;--success:#22c55e;--danger:#ef4444;--warning:#f59e0b;--font:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+body{font-family:var(--font);background:var(--bg);color:var(--text);padding:0;min-height:100vh}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:220px;background:var(--bg);border-right:1px solid var(--border);padding:24px 16px;flex-shrink:0}
+.sidebar h1{font-size:15px;font-weight:600;color:var(--text);padding:0 12px 24px;letter-spacing:-0.3px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:14px;color:var(--text-secondary);cursor:pointer;transition:.15s;margin-bottom:2px}
+.nav-item:hover{background:var(--border);color:var(--text)}
+.nav-item.active{background:var(--accent);color:#fff;font-weight:500}
+.main{flex:1;padding:28px 36px;overflow-y:auto}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+header h2{font-size:22px;font-weight:600;letter-spacing:-0.5px;color:var(--text)}
+.header-actions{display:flex;gap:10px;align-items:center}
+.header-time{font-size:13px;color:var(--text-muted)}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.kpi-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px;transition:.2s}
+.kpi-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06);border-color:#d4d4d8}
+.kpi-label{font-size:12px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.kpi-value{font-size:28px;font-weight:700;letter-spacing:-1px;color:var(--text)}
+.kpi-value .unit{font-size:14px;font-weight:500;color:var(--text-muted);margin-left:4px}
+.kpi-sub{font-size:12px;color:var(--text-muted);margin-top:4px}
+.kpi-accent .kpi-value{color:var(--accent)}
+.kpi-success .kpi-value{color:var(--success)}
+.kpi-warning .kpi-value{color:var(--warning)}
+.chart-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:0}
+.chart-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px;transition:.2s}
+.chart-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.chart-header{font-size:13px;font-weight:600;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.chart-body{display:flex;align-items:center;gap:0}
+.chart-metric{flex:1;text-align:center}
+.chart-metric .cm-label{font-size:11px;color:var(--text-muted);font-weight:500;margin-bottom:4px}
+.chart-metric .cm-value{font-size:22px;font-weight:700}
+.chart-metric .cm-unit{font-size:12px;color:var(--text-muted);margin-left:2px}
+.chart-metric .cm-money{color:var(--accent)}
+.chart-divider{width:1px;height:36px;background:var(--border);flex-shrink:0}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:100px;font-size:11px;font-weight:600}
+.badge-green{background:#dcfce7;color:#166534}
+.badge-red{background:#fef2f2;color:#991b1b}
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="sidebar">
+    <h1>🏠 House</h1>
+    <div class="nav-item active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>数据大屏</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>房间管理</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>月度账单</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>历史账单</div>
+  </div>
+  <div class="main">
+    <header>
+      <h2>2026年06月 数据概览</h2>
+      <div class="header-actions">
+        <span class="header-time">2026年6月10日</span>
+        <span style="padding:6px 16px;background:var(--accent);color:#fff;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer">数据大屏</span>
+      </div>
+    </header>
+    <div class="kpi-grid">
+      <div class="kpi-card kpi-accent">
+        <div class="kpi-label">当月总收入</div>
+        <div class="kpi-value">0.00<span class="unit">元</span></div>
+        <div class="kpi-sub">较上月 —</div>
+      </div>
+      <div class="kpi-card kpi-success">
+        <div class="kpi-label">已缴费</div>
+        <div class="kpi-value">0<span class="unit">/ 0 间</span></div>
+        <div class="kpi-sub" style="display:flex;align-items:center;gap:6px;margin-top:6px"><span style="width:50px;height:4px;background:#e4e4e7;border-radius:2px;overflow:hidden"><span style="display:block;width:0%;height:100%;background:var(--success);border-radius:2px"></span></span>0%</div>
+      </div>
+      <div class="kpi-card kpi-warning">
+        <div class="kpi-label">未缴费</div>
+        <div class="kpi-value">0<span class="unit">间</span></div>
+        <div class="kpi-sub"><span class="badge badge-red">待催收</span></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">出租率</div>
+        <div class="kpi-value">0<span class="unit">%</span></div>
+        <div class="kpi-sub" style="display:flex;align-items:center;gap:6px;margin-top:6px"><span style="width:50px;height:4px;background:#e4e4e7;border-radius:2px;overflow:hidden"><span style="display:block;width:0%;height:100%;background:var(--accent);border-radius:2px"></span></span>0 / 0 间</div>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="chart-header"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e6a23c" stroke-width="2" style="vertical-align:middle;margin-right:6px"><path d="M13.5 2L4.2 13.5h5.3L10 22l9.3-11.5H14L13.5 2z"/></svg>电费</div>
+        <div class="chart-body">
+          <div class="chart-metric"><div class="cm-label">用量</div><div class="cm-value">0.0<span class="cm-unit">度</span></div></div>
+          <div class="chart-divider"></div>
+          <div class="chart-metric"><div class="cm-label">收入</div><div class="cm-value cm-money">0.00<span class="cm-unit">元</span></div></div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" style="vertical-align:middle;margin-right:6px"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>水费</div>
+        <div class="chart-body">
+          <div class="chart-metric"><div class="cm-label">用量</div><div class="cm-value">0.0<span class="cm-unit">吨</span></div></div>
+          <div class="chart-divider"></div>
+          <div class="chart-metric"><div class="cm-label">收入</div><div class="cm-value cm-money">0.00<span class="cm-unit">元</span></div></div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" style="vertical-align:middle;margin-right:6px"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>房租</div>
+        <div class="chart-body">
+          <div class="chart-metric"><div class="cm-label">房间数</div><div class="cm-value">0<span class="cm-unit">间</span></div></div>
+          <div class="chart-divider"></div>
+          <div class="chart-metric"><div class="cm-label">收入</div><div class="cm-value cm-money">0.00<span class="cm-unit">元</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

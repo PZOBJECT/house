@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>收租管理 · 现代灰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --slate: #0f172a;
+    --slate-light: #1e293b;
+    --slate-border: #334155;
+    --slate-hover: #475569;
+    --slate-text: #94a3b8;
+    --slate-active-text: #f1f5f9;
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --border: #e2e8f0;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --accent: #e11d48;
+    --accent-hover: #be123c;
+    --accent-light: #ffe4e6;
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --amber: #d97706;
+    --amber-light: #fef3c7;
+    --blue: #2563eb;
+    --blue-light: #dbeafe;
+    --violet: #7c3aed;
+    --violet-light: #ede9fe;
+    --cyan: #0891b2;
+    --cyan-light: #cffafe;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 3px 0 rgba(0,0,0,.06), 0 1px 2px -1px rgba(0,0,0,.06);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,.08), 0 2px 4px -2px rgba(0,0,0,.06);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+  html { font-size: 14px; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text-primary);
+    display: flex;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    background: var(--slate);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    border-right: 1px solid rgba(255,255,255,.04);
+  }
+  .sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--slate-border);
+  }
+  .sidebar-brand .logo {
+    width: 36px;
+    height: 36px;
+    background: var(--accent);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .sidebar-brand h1 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--slate-active-text);
+    letter-spacing: -0.02em;
+  }
+  .sidebar-brand .badge {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--slate-text);
+    background: var(--slate-light);
+    padding: 1px 8px;
+    border-radius: 100px;
+    margin-left: auto;
+  }
+  .sidebar-nav {
+    padding: 12px 12px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .sidebar-nav .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--slate-text);
+    padding: 16px 12px 6px;
+    opacity: .5;
+  }
+  .sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    color: var(--slate-text);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all .15s ease;
+    position: relative;
+  }
+  .sidebar-nav a:hover { background: var(--slate-light); color: var(--slate-active-text); }
+  .sidebar-nav a.active {
+    background: var(--slate-light);
+    color: var(--slate-active-text);
+  }
+  .sidebar-nav a.active::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 24px;
+    background: var(--accent);
+    border-radius: 0 4px 4px 0;
+  }
+  .sidebar-nav a .icon { width: 20px; height: 20px; flex-shrink: 0; opacity: .7; }
+  .sidebar-nav a .nav-count {
+    margin-left: auto;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0 8px;
+    border-radius: 100px;
+    line-height: 18px;
+  }
+  .sidebar-footer {
+    padding: 12px;
+    border-top: 1px solid var(--slate-border);
+  }
+  .sidebar-footer .user-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .sidebar-footer .user-card:hover { background: var(--slate-light); }
+  .sidebar-footer .avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--slate-hover);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .sidebar-footer .user-info { flex: 1; min-width: 0; }
+  .sidebar-footer .user-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--slate-active-text);
+    line-height: 1.3;
+  }
+  .sidebar-footer .user-role {
+    font-size: 11px;
+    color: var(--slate-text);
+  }
+
+  /* ===== MAIN LAYOUT ===== */
+  .main-wrapper {
+    margin-left: 260px;
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .header-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+  .header-breadcrumb span { color: var(--text-primary); font-weight: 500; }
+  .header-spacer { flex: 1; }
+  .header-actions { display: flex; align-items: center; gap: 12px; }
+  .header-actions .search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0 12px;
+    height: 36px;
+    width: 220px;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .header-actions .search-box:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(225, 29, 72, .12);
+  }
+  .header-actions .search-box input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-family: var(--font);
+    font-size: 13px;
+    color: var(--text-primary);
+    width: 100%;
+  }
+  .header-actions .search-box input::placeholder { color: var(--text-muted); }
+  .header-actions .search-box svg { width: 16px; height: 16px; color: var(--text-muted); flex-shrink: 0; }
+  .header-btn {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all .15s;
+    position: relative;
+    color: var(--text-secondary);
+  }
+  .header-btn:hover { border-color: var(--slate-hover); background: var(--bg); }
+  .header-btn .dot {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    border: 2px solid var(--surface);
+  }
+  .header-btn svg { width: 18px; height: 18px; }
+  .header-date {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+    padding: 0 4px;
+  }
+
+  /* ===== CONTENT ===== */
+  .content {
+    padding: 24px 32px 40px;
+    flex: 1;
+  }
+  .page-title {
+    margin-bottom: 24px;
+  }
+  .page-title h2 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  .page-title p {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  /* ===== KPI CARDS ===== */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: box-shadow .2s, border-color .2s;
+  }
+  .kpi-card:hover { box-shadow: var(--shadow-md); border-color: #cbd5e1; }
+  .kpi-card .kpi-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .kpi-card .kpi-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    line-height: 1.3;
+  }
+  .kpi-card .kpi-icon {
+    width: 38px; height: 38px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .kpi-card .kpi-icon svg { width: 20px; height: 20px; }
+  .kpi-card .kpi-value {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .kpi-card .kpi-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 100px;
+  }
+  .kpi-card .kpi-change.up { color: var(--green); background: var(--green-light); }
+  .kpi-card .kpi-change.down { color: var(--accent); background: var(--accent-light); }
+  .kpi-card .kpi-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ===== BREAKDOWN CARDS ===== */
+  .breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .breakdown-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: box-shadow .2s, border-color .2s;
+  }
+  .breakdown-card:hover { box-shadow: var(--shadow-md); border-color: #cbd5e1; }
+  .breakdown-card .card-header {
+    padding: 18px 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .breakdown-card .card-header h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .breakdown-card .card-header .card-icon {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .breakdown-card .card-header .card-icon svg { width: 18px; height: 18px; }
+  .breakdown-card .card-header .card-total {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .breakdown-card .card-body { padding: 14px 20px 18px; }
+  .breakdown-card .card-summary {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .breakdown-card .card-summary .stat { flex: 1; }
+  .breakdown-card .card-summary .stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: 2px;
+  }
+  .breakdown-card .card-summary .stat-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  /* ===== TABLE INSIDE CARDS ===== */
+  .room-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .room-table thead th {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--text-muted);
+    text-align: left;
+    padding: 6px 0 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .room-table tbody td {
+    padding: 8px 0;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .room-table tbody tr:last-child td { border-bottom: none; }
+  .room-table .room-no {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .room-table .cost-total {
+    font-weight: 600;
+  }
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 100px;
+    line-height: 20px;
+  }
+  .status-badge.paid { color: var(--green); background: var(--green-light); }
+  .status-badge.unpaid { color: var(--accent); background: var(--accent-light); }
+  .status-badge.partial { color: var(--amber); background: var(--amber-light); }
+  .card-footer-link {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-top: 1px solid var(--border);
+    transition: color .15s, background .15s;
+  }
+  .card-footer-link:hover { color: var(--accent); background: var(--bg); }
+
+  /* ===== MISC ===== */
+  .unpaid-highlight {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* SVG icons inline */
+  .icon-svg { display: inline-block; }
+</style>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo">房</div>
+    <h1>收租管理</h1>
+    <span class="badge">v2.0</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="section-label">概览</div>
+    <a href="#" class="active">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      仪表盘
+    </a>
+    <a href="#">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      房间管理
+      <span class="nav-count">36</span>
+    </a>
+    <a href="#">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      月度账单
+    </a>
+
+    <div class="section-label">财务</div>
+    <a href="#">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      收租记录
+    </a>
+    <a href="#">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      导出报表
+    </a>
+
+    <div class="section-label">系统</div>
+    <a href="#">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      系统设置
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="avatar">王</div>
+      <div class="user-info">
+        <div class="user-name">王经理</div>
+        <div class="user-role">管理员</div>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--slate-text)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+  </div>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<div class="main-wrapper">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-breadcrumb">
+      收租管理 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      <span>仪表盘</span>
+    </div>
+    <div class="header-spacer"></div>
+    <div class="header-date">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:6px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      2026 年 6 月
+    </div>
+    <div class="header-actions">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="搜索房间号、租客…">
+      </div>
+      <button class="header-btn" title="通知">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="dot"></span>
+      </button>
+      <button class="header-btn" title="设置">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- Page Title -->
+    <div class="page-title">
+      <h2>仪表盘</h2>
+      <p>本月收租概况 · 2026 年 6 月</p>
+    </div>
+
+    <!-- KPI Grid -->
+    <div class="kpi-grid">
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <div>
+            <div class="kpi-label">本月应收</div>
+          </div>
+          <div class="kpi-icon" style="background:var(--green-light);color:var(--green);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+        </div>
+        <div class="kpi-value">¥43,200</div>
+        <div class="kpi-change up">↑ 3.2%</div>
+        <div class="kpi-sub">36 间房 · 均价 ¥1,200</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <div>
+            <div class="kpi-label">已收金额</div>
+          </div>
+          <div class="kpi-icon" style="background:var(--blue-light);color:var(--blue);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+        </div>
+        <div class="kpi-value">¥36,800</div>
+        <div class="kpi-change up">↑ 85.2%</div>
+        <div class="kpi-sub">已收 30 间 · 完成率 83.3%</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <div>
+            <div class="kpi-label">未收金额</div>
+          </div>
+          <div class="kpi-icon" style="background:var(--accent-light);color:var(--accent);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          </div>
+        </div>
+        <div class="kpi-value unpaid-highlight">¥6,400</div>
+        <div class="kpi-change down">↑ 6 间未付</div>
+        <div class="kpi-sub">较上月增加 2 间</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <div>
+            <div class="kpi-label">逾期天数</div>
+          </div>
+          <div class="kpi-icon" style="background:var(--amber-light);color:var(--amber);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+        </div>
+        <div class="kpi-value unpaid-highlight">14 天</div>
+        <div class="kpi-change down">↑ 最长逾期</div>
+        <div class="kpi-sub">平均逾期 6.2 天</div>
+      </div>
+    </div>
+
+    <!-- Breakdown Grid -->
+    <div class="breakdown-grid">
+
+      <!-- ELECTRICITY -->
+      <div class="breakdown-card">
+        <div class="card-header">
+          <h3>
+            <span class="card-icon" style="background:var(--amber-light);color:var(--amber);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h12l-1 8 10-12H12l1-8z"/></svg>
+            </span>
+            电费
+          </h3>
+          <span class="card-total">¥3,640</span>
+        </div>
+        <div class="card-body">
+          <div class="card-summary">
+            <div class="stat">
+              <div class="stat-label">均价</div>
+              <div class="stat-value">¥101.1</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">最高</div>
+              <div class="stat-value unpaid-highlight">¥198</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">单价</div>
+              <div class="stat-value">1.0 元/度</div>
+            </div>
+          </div>
+          <table class="room-table">
+            <thead>
+              <tr><th>房间</th><th>用量</th><th>费用</th><th>状态</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="room-no">312</td>
+                <td>198 度</td>
+                <td class="cost-total unpaid-highlight">¥198</td>
+                <td><span class="status-badge unpaid">未缴</span></td>
+              </tr>
+              <tr>
+                <td class="room-no">207</td>
+                <td>156 度</td>
+                <td class="cost-total">¥156</td>
+                <td><span class="status-badge paid">已缴</span></td>
+              </tr>
+              <tr>
+                <td class="room-no">105</td>
+                <td>142 度</td>
+                <td class="cost-total">¥142</td>
+                <td><span class="status-badge paid">已缴</span></td>
+              </tr>
+              <tr>
+                <td class="room-no">110</td>
+                <td>98 度</td>
+                <td class="cost-total">¥98</td>
+                <td><span class="status-badge paid">已缴</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <a href="#" class="card-footer-link">查看全部电费账单 →</a>
+      </div>
+
+      <!-- WATER -->
+      <div class="breakdown-card">
+        <div class="card-header">
+          <h3>
+            <span class="card-icon" style="background:var(--cyan-light);color:var(--cyan);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+            </span>
+            水费
+          </h3>
+          <span class="card-total">¥1,820</span>
+        </div>
+        <div class="card-body">
+          <div class="card-summary">
+            <div class="stat">
+              <div class="stat-label">均价</div>
+              <div class="stat-value">¥50.6</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">最高</div>
+              <div class="stat-value unpaid-highlight">¥95</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">单价</div>
+              <div class="stat-value">5.0 元/吨</div>
+            </div>
+          </div>
+          <table class="room-table">
+            <thead>
+              <tr><th>房间</th><th>用量</th><th>费用</th><th>状态</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="room-no">305</td>
+                <td>19 吨</td>
+                <td class="cost-total unpaid-highlight">¥95</td>
+                <td><span class="status-badge unpaid">未缴</span></td>
+              </tr>
+              <tr>
+                <td class="room-no">312</td>
+                <td>16 吨</td>
+                <td class="cost-total">¥80</td>
+                <td><span class="status-badge unpaid">未缴</span></td>
+              </tr>
+              <tr>
+                <td class="room-no">201</td>
+                <td>12 吨</td>
+                <td class="cost-total">¥60</td>
+                <td><span class="status-badge paid">已缴</span></td>
+              </tr>
+              <tr>
+                <td class="room-no">108</td>
+                <td>8 吨</td>
+                <td class="cost-total">¥40</td>
+                <td><span class="status-badge paid">已缴</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <a href="#" class="card-footer-link">查看全部水费账单 →</a>
+      </div>
+
+      <!-- RENT -->
+      <div class="breakdown-card">
+        <div class="card-header">
+          <h3>
+            <span class="card-icon" style="background:var(--violet-light);color:var(--violet);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </span>
+            房租
+          </h3>
+          <span class="card-total">¥37,740</span>
+        </div>
+        <div class="card-body">
+          <div class="card-summary">
+            <div class="stat">
+              <div class="stat-label">标准租金</div>
+              <div class="stat-value">¥1,200</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">最高</div>
+              <div class="stat-value unpaid-highlight">¥1,500</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">已收/未收</div>
+              <div class="stat-value">30 / 6</div>
+            </div>
+          </div>
+          <table class="room-table">
+            <thead>
+              <tr><th>房间</th><th>月租</th><th>费用</th><th>状态</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="room-no">312</td>
+                <td>¥1,200</td>
+                <td class="cost-total unpaid-highlight">¥1,200</td>
+                <td><span class="status-badge unpaid">未缴</span></td>
+              </tr>
+              <tr>
+                <td class="room-no">305</td>
+                <td>¥1,200</td>
+                <td class="cost-total unpaid-highlight">¥1,200</td>
+                <td><span class="status-badge unpaid">未缴</span></td>
+              </tr>
+              <tr>
+                <td class="room-no">110</td>
+                <td>¥1,200</td>
+                <td class="cost-total">¥1,200</td>
+                <td><span class="status-badge paid">已缴</span></td>
+              </tr>
+              <tr>
+                <td class="room-no">101</td>
+                <td>¥1,500</td>
+                <td class="cost-total">¥1,500</td>
+                <td><span class="status-badge paid">已缴</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <a href="#" class="card-footer-link">查看全部房租账单 →</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
