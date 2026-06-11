@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>极简科技感 · 数据大屏</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;...
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="6" fill="#171717"/><path d="M8 14h12M14 8v12" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+      <span class="logo-text">house</span>
+    </div>
+    <nav class="nav">
+      <a class="nav-item active" href="#"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M6 8h4M8 6v4" stroke="currentColor" stroke-width="1.2"/></svg><span>数据大屏</span></a>
+      <a class="nav-item" href="#"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M2 6h12" stroke="currentColor" stroke-width="1.2"/></svg><span>房间管理</span></a>
+      <a class="nav-item" href="#"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12v10H2z" stroke="currentColor" stroke-width="1.2" rx="1.5"/><path d="M5 2v2M11 2v2" stroke="currentColor" stroke-width="1.2"/></svg><span>月度账单</span></a>
+      <a class="nav-item" href="#"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12v10H2z" stroke="currentColor" stroke-width="1.2"/><path d="M5 2v2M11 2v2" stroke="currentColor" stroke-width="1.2"/></svg><span>历史账单</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="avatar">张</div>
+        <div class="user-name">张明</div>
+        <div class="user-role">管理员</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="header">
+      <div>
+        <h1 class="page-title">数据大屏</h1>
+        <p class="page-subtitle">2026年6月 · 收支概览</p>
+      </div>
+      <div class="header-actions">
+        <div class="date-display">2026.06.11</div>
+        <button class="btn btn-primary">导出报表</button>
+      </div>
+    </header>
+
+    <!-- KPI Cards -->
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">当月租金收入</div>
+        <div class="kpi-value">¥128,600</div>
+        <div class="kpi-trend up">+8.3%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">已缴纳</div>
+        <div class="kpi-value">36</div>
+        <div class="kpi-label-value">间</div>
+        <div class="kpi-trend up">+2</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">未缴纳</div>
+        <div class="kpi-value">4</div>
+        <div class="kpi-label-value">间</div>
+        <div class="kpi-trend down">-1</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">出租率</div>
+        <div class="kpi-value">92%</div>
+        <div class="kpi-trend up">+2.1%</div>
+      </div>
+    </section>
+
+    <!-- Detail Cards -->
+    <section class="detail-grid">
+      <div class="detail-card">
+        <div class="detail-header">
+          <h3 class="detail-title">电费收入</h3>
+          <span class="tag">本月</span>
+        </div>
+        <div class="detail-number">¥32,150</div>
+        <div class="detail-meta">¥0.85/度 · 37,823 度</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:78%"></div></div>
+        <div class="detail-footer"><span>上月 ¥29,400</span><span class="up">+9.4%</span></div>
+      </div>
+      <div class="detail-card">
+        <div class="detail-header">
+          <h3 class="detail-title">水费收入</h3>
+          <span class="tag">本月</span>
+        </div>
+        <div class="detail-number">¥8,460</div>
+        <div class="detail-meta">¥4.5/吨 · 1,880 吨</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:62%"></div></div>
+        <div class="detail-footer"><span>上月 ¥7,200</span><span class="up">+17.5%</span></div>
+      </div>
+      <div class="detail-card">
+        <div class="detail-header">
+          <h3 class="detail-title">房租收入</h3>
+          <span class="tag">本月</span>
+        </div>
+        <div class="detail-number">¥88,000</div>
+        <div class="detail-meta">40 间在租 · 均价 ¥2,200/间</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div>
+        <div class="detail-footer"><span>上月 ¥85,000</span><span class="up">+3.5%</span></div>
+      </div>
+    </section>
+
+    <!-- Recent Bills -->
+    <section class="table-section">
+      <div class="table-header">
+        <h3 class="detail-title">近期账单</h3>
+        <a href="#" class="link">查看全部 →</a>
+      </div>
+      <table class="bills-table">
+        <thead><tr><th>房间号</th><th>租客</th><th>费用类型</th><th>金额</th><th>账期</th><th>状态</th></tr></thead>
+        <tbody>
+          <tr><td>201</td><td>李伟</td><td>电费+水费+房租</td><td>¥3,280</td><td>2026-06</td><td><span class="status status-paid">已缴</span></td></tr>
+          <tr><td>302</td><td>王芳</td><td>电费+水费+房租</td><td>¥2,950</td><td>2026-06</td><td><span class="status status-paid">已缴</span></td></tr>
+          <tr><td>205</td><td>陈强</td><td>电费+房租</td><td>¥2,680</td><td>2026-06</td><td><span class="status status-pending">待缴</span></td></tr>
+          <tr><td>401</td><td>赵丽</td><td>电费+水费+房租</td><td>¥3,420</td><td>2026-06</td><td><span class="status status-paid">已缴</span></td></tr>
+          <tr><td>503</td><td>孙明</td><td>电费+房租</td><td>¥2,150</td><td>2026-06</td><td><span class="status status-overdue">逾期</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+</body>
+</html>
