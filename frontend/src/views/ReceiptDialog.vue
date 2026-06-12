@@ -11,10 +11,6 @@
           <span>账期：</span>
           <span class="info-value">{{ receipt.year }}年{{ receipt.month }}月</span>
         </div>
-        <div class="info-row" v-if="receipt.paid_at">
-          <span>收费日期：</span>
-          <span class="info-value">{{ formatDate(receipt.paid_at) }}</span>
-        </div>
       </div>
       <table class="receipt-table">
         <thead>
@@ -60,10 +56,6 @@
           </tr>
         </tfoot>
       </table>
-      <div class="receipt-footer">
-        <div>收款人：___________</div>
-        <div>日期：___________</div>
-      </div>
     </div>
     <template #footer>
       <el-button @click="visible = false">关闭</el-button>
