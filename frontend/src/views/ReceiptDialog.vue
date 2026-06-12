@@ -74,12 +74,6 @@ const visible = ref(false)
 const downloading = ref(false)
 const receiptRef = ref(null)
 
-function formatDate(dateStr) {
-  if (!dateStr) return '-'
-  const d = new Date(dateStr)
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-}
-
 const receipt = reactive({
   room_no: '',
   year: '',
@@ -191,13 +185,5 @@ defineExpose({ open })
 .total-amount {
   color: #e6a23c;
   font-size: 18px;
-}
-
-.receipt-footer {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 28px;
-  padding: 0 10px;
-  font-size: 15px;
 }
 </style>
