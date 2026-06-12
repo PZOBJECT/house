@@ -21,11 +21,15 @@
       </el-button>
     </el-header>
     <el-container>
-      <el-aside width="200px" style="background: #f0f4f8">
+      <el-aside width="200px" style="background: #1e293b">
         <el-menu
           :default-active="activeMenu"
           router
-          style="border-right: none; height: 100%"
+          style="border-right: none; height: 100%; background: #1e293b"
+          text-color="#94a3b8"
+          active-text-color="#fff"
+          --el-menu-hover-bg-color: #334155
+          --el-menu-active-color: #fff
         >
           <el-menu-item index="/">
             <el-icon><HomeFilled /></el-icon>
@@ -59,10 +63,11 @@ const isDashboard = computed(() => route.path === '/dashboard')
 
 <style>
 :root {
-  --el-bg-color-page: #f0f4f8;
+  --el-bg-color-page: #f5f5f7;
 }
 body {
-  background: #f0f4f8;
+  background: #f5f5f7;
+  margin: 0;
 }
 .dash-btn {
   display: inline-flex !important;
